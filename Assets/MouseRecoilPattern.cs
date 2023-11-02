@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class RecoilPattern : ScriptableObject
+public class MouseRecoilPattern : ScriptableObject
 {
     public List<Vector2> recoilDeltas;
     public bool staticPattern;
