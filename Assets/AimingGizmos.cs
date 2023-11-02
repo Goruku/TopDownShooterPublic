@@ -7,8 +7,6 @@ public class AimingGizmos : MonoBehaviour
 
     public PhysicsTargeter physicsTargeter;
     
-    public CinemachineVirtualCamera virtualCamera;
-    
     public Transform trueTarget;
     public LineRenderer trueTargetLineRenderer;
     
