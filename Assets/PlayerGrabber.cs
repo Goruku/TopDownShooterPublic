@@ -42,7 +42,7 @@ public class PlayerGrabber : MonoBehaviour
         {
             if (!collider) continue;
             var shootingManager = collider.GetComponent<ShootingManager>();
-            if (shootingManager && !shootingManager.playerOwned)
+            if (shootingManager && !shootingManager.owner)
             {
                 Debug.Log("You tried to pick up a gun!");
                 gunMounter.SwapGun(shootingManager);

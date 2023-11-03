@@ -11,11 +11,6 @@ public class GunMounter : MonoBehaviour
 {
     public ShootingManager shootingManager;
 
-    private void AttemptFiring()
-    {
-        shootingManager.AttemptFiring();
-    }
-
     public void SwapGun(ShootingManager otherShooterManager)
     {
         var formerParent = otherShooterManager.transform.parent;
@@ -29,9 +24,7 @@ public class GunMounter : MonoBehaviour
         }
         shootingManager.transform.SetParent(formerParent, true);
         
-        shootingManager.playerOwned = false;
         shootingManager = otherShooterManager;
-        shootingManager.playerOwned = true;
         shootingManager.transform.localPosition = new Vector3();
         shootingManager.transform.rotation = new Quaternion();
     }
@@ -41,6 +34,5 @@ public class GunMounter : MonoBehaviour
         var shootingManagers = transform.GetComponentsInChildren<ShootingManager>();
         if (shootingManagers.Length <= 0) return;
         shootingManager = shootingManagers[0];
-        shootingManager.playerOwned = true;
     }
 }
