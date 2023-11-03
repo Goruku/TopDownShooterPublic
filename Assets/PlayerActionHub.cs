@@ -16,31 +16,22 @@ public class PlayerActionHub : MonoBehaviour
         public string name;
         public InputActionAsset playerInputAsset;
 
-        public void AddStarted(Action<InputAction.CallbackContext> action)
+        public event Action<InputAction.CallbackContext> started
         {
-            playerInputAsset.actionMaps[0][name].started += action;
-        }
-
-        public void RemoveStarted(Action<InputAction.CallbackContext> action)
-        {
-            playerInputAsset.actionMaps[0][name].started -= action;
+            add => playerInputAsset.actionMaps[0][name].started += value;
+            remove => playerInputAsset.actionMaps[0][name].started -= value;
         }
         
-        public void AddPerformed(Action<InputAction.CallbackContext> action)
+        public event Action<InputAction.CallbackContext> performed
         {
-            playerInputAsset.actionMaps[0][name].performed += action;
+            add => playerInputAsset.actionMaps[0][name].performed += value;
+            remove => playerInputAsset.actionMaps[0][name].performed -= value;
         }
-        public void RemovePerformed(Action<InputAction.CallbackContext> action)
+        
+        public event Action<InputAction.CallbackContext> canceled
         {
-            playerInputAsset.actionMaps[0][name].performed -= action;
-        }
-        public void AddCanceled(Action<InputAction.CallbackContext> action)
-        {
-            playerInputAsset.actionMaps[0][name].canceled += action;
-        }
-        public void RemoveCanceled(Action<InputAction.CallbackContext> action)
-        {
-            playerInputAsset.actionMaps[0][name].canceled -= action;
+            add => playerInputAsset.actionMaps[0][name].canceled += value;
+            remove => playerInputAsset.actionMaps[0][name].canceled -= value;
         }
     }
 

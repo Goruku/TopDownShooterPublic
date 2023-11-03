@@ -25,12 +25,12 @@ public class PlayerGrabber : MonoBehaviour
 
     private void OnEnable()
     {
-        playerActionHub.pickUp.AddPerformed(Grab);
+        playerActionHub.pickUp.performed += Grab;
     }
 
     private void OnDisable()
     {
-        playerActionHub.pickUp.RemovePerformed(Grab);
+        playerActionHub.pickUp.performed -= Grab;
     }
 
     void Grab(InputAction.CallbackContext callbackContext)

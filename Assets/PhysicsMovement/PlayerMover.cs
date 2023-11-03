@@ -17,16 +17,16 @@ public class PlayerMover : MonoBehaviour
 
     private void OnEnable()
     {
-        playerActionHub.move.AddStarted(StartMovement);
-        playerActionHub.move.AddPerformed(StartMovement);
-        playerActionHub.move.AddCanceled(EndMovement);
+        playerActionHub.move.started += StartMovement;
+        playerActionHub.move.performed += StartMovement;
+        playerActionHub.move.canceled += EndMovement;
     }
 
     private void OnDisable()
     {
-        playerActionHub.move.RemoveStarted(StartMovement);
-        playerActionHub.move.RemovePerformed(StartMovement);
-        playerActionHub.move.RemoveCanceled(EndMovement);
+        playerActionHub.move.started -= StartMovement;
+        playerActionHub.move.performed -= StartMovement;
+        playerActionHub.move.canceled -= EndMovement;
     }
 
     private void StartMovement(InputAction.CallbackContext callbackContext)
