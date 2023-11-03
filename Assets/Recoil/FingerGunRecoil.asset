@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68702f1967eea374ebc9fa64d75d2af4, type: 3}
-  m_Name: PistolPhysicsRecoil
+  m_Name: FingerGunRecoil
   m_EditorClassIdentifier: 
-  recoilRandomness: 0.5
+  recoilRandomness: 1
   recoils:
   - {x: 0, y: -10}
   recoilRandomnessSpread:
@@ -21,17 +21,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.19924606
-      outSlope: 0.19924606
+      inSlope: 9
+      outSlope: 9
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.0037842
-      value: 1.2
-      inSlope: 0.19924606
-      outSlope: 0.19924606
+      time: 1
+      value: 10
+      inSlope: 9
+      outSlope: 9
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -39,30 +39,27 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torques:
-  - 2
-  - 2
-  - -2
+  torques: []
   torqueRandomnessSpread:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.20000005
-      outSlope: 0.20000005
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.2
-      inSlope: 0.20000005
-      outSlope: 0.20000005
+      value: 1
+      inSlope: 0
+      outSlope: 0
       tangentMode: 34
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

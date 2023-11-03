@@ -3,39 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 [ExecuteAlways]
 public class GunMounter : MonoBehaviour
 {
-    public List<ShootingManager> _currentManagers = new List<ShootingManager>();
+    public ShootingManager shootingManager;
 
-    private void AttemptFiringAll()
+    private void AttemptFiring()
     {
-        foreach (var shootingManager in _currentManagers)
-        {
-            shootingManager.AttemptFiring();
-        }
+        shootingManager.AttemptFiring();
     }
-    
+
+    public void SwapGun(ShootingManager otherShooterManager)
+    {
+        var formerParent = otherShooterManager.transform.parent;
+        if (!formerParent)
+        {
+            otherShooterManager.transform.parent = shootingManager.transform.parent;
+        }
+        else
+        {
+            otherShooterManager.transform.SetParent(shootingManager.transform.parent, true);
+        }
+        shootingManager.transform.SetParent(formerParent, true);
+        
+        shootingManager.playerOwned = false;
+        shootingManager = otherShooterManager;
+        shootingManager.playerOwned = true;
+        shootingManager.transform.localPosition = new Vector3();
+        shootingManager.transform.rotation = new Quaternion();
+    }
+
     private void OnTransformChildrenChanged()
     {
         var shootingManagers = transform.GetComponentsInChildren<ShootingManager>();
-        foreach (var shootingManager in shootingManagers)
-        {
-            if (!_currentManagers.Contains(shootingManager))
-            {
-                _currentManagers.Add(shootingManager);
-                shootingManager.playerOwned = true;
-            }
-        }
-
-        foreach (var shootingManager in _currentManagers.ToList())
-        {
-            if (!shootingManagers.Contains(shootingManager))
-            {
-                _currentManagers.Remove(shootingManager);
-                shootingManager.playerOwned = false;
-            }
-        }
+        if (shootingManagers.Length <= 0) return;
+        shootingManager = shootingManagers[0];
+        shootingManager.playerOwned = true;
     }
 }
