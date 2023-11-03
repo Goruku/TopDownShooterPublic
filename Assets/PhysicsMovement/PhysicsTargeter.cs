@@ -13,8 +13,7 @@ public class PhysicsTargeter : MonoBehaviour
 
     public AimingSensitivityProfile aimingSensitivityProfile;
     
-    public float minRange;
-    public float maxRange;
+    public TargetingRange targetingRange;
     public float distanceDifferential;
     public float lookDifferential;
     
@@ -39,6 +38,16 @@ public class PhysicsTargeter : MonoBehaviour
         _rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
+    private void OnEnable()
+    {
+        if (!targetingRange)
+        {
+            targetingRange = ScriptableObject.CreateInstance<TargetingRange>();
+            targetingRange.minRange = 0;
+            targetingRange.maxRange = float.MaxValue;
+        }
+    }
+
     void FixedUpdate()
     {
         if (!target) return;
@@ -56,7 +65,7 @@ public class PhysicsTargeter : MonoBehaviour
                             aimingSensitivityProfile.rotationMultiplier;
 
         var targetingVectorMagnitude = _targetingVector.magnitude;
-        distanceDifferential = Mathf.Clamp(targetingVectorMagnitude, minRange, maxRange)/maxRange;
+        distanceDifferential = Mathf.Clamp(targetingVectorMagnitude, targetingRange.minRange, targetingRange.maxRange)/targetingRange.maxRange;
         rotationSpeed *= aimingSensitivityProfile.distanceCurve.Evaluate(distanceDifferential) * 
                          aimingSensitivityProfile.distanceMultiplier;
         //TODO: angular drag with distance curve?

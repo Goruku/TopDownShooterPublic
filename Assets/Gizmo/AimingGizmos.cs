@@ -24,10 +24,10 @@ public class AimingGizmos : MonoBehaviour
     {
         var targetingVector = physicsTargeter.GetTargetingVector().normalized;
         
-        distanceTracker.position = (Vector3) physicsTargeter.transform.position + physicsTargeter.maxRange*
+        distanceTracker.position = (Vector3) physicsTargeter.transform.position + physicsTargeter.targetingRange.maxRange*
             physicsTargeter.distanceDifferential*targetingVector.normalized;
         
-        if (physicsTargeter.distanceDifferential < 1 && targetingVector.magnitude > physicsTargeter.minRange)
+        if (physicsTargeter.distanceDifferential < 1 && targetingVector.magnitude > physicsTargeter.targetingRange.minRange)
             _trackerRenderer.enabled = false;
         else
             _trackerRenderer.enabled = true;
@@ -35,7 +35,7 @@ public class AimingGizmos : MonoBehaviour
         if (trueTarget)
         {
             trueTarget.position = physicsTargeter.transform.position + physicsTargeter.GetCurrentRotation()
-                * (Vector3.up * (physicsTargeter.maxRange * physicsTargeter.distanceDifferential));
+                * (Vector3.up * (physicsTargeter.targetingRange.maxRange * physicsTargeter.distanceDifferential));
             if (trueTargetLineRenderer)
             {
                 trueTargetLineRenderer.SetPositions(new Vector3[]{physicsTargeter.transform.position, trueTarget.position});

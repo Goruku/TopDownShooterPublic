@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,13 +6,31 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(ShootingManager))]
 public class RecoilManager : MonoBehaviour
 {
     public MouseRecoilPattern mouseRecoilPattern;
     public PhysicsRecoilPattern physicsRecoilPattern;
+    private ShootingManager _shootingManager;
     public Rigidbody2D physicsObject;
 
-    public void ApplyRecoil()
+    private void Awake()
+    {
+        _shootingManager = GetComponent<ShootingManager>();
+        
+    }
+
+    private void OnEnable()
+    {
+        _shootingManager.afterShot += ApplyRecoil;
+    }
+
+    private void OnDisable()
+    {
+        _shootingManager.afterShot -= ApplyRecoil;
+    }
+
+    public void ApplyRecoil(Transform pointerLocation)
     {
         if (mouseRecoilPattern)
         {
