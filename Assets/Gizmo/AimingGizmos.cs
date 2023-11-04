@@ -1,3 +1,4 @@
+using System;
 using Cinemachine;
 using UnityEngine;
 
@@ -15,8 +16,25 @@ public class AimingGizmos : MonoBehaviour
     private void Awake()
     {
         _trackerRenderer = distanceTracker.GetComponent<SpriteRenderer>();
-        physicsTargeter = GetComponent<PhysicsTargeter>();
-        physicsTargeter.afterUpdate += UpdateGizmos;
+    }
+
+    private void OnEnable()
+    {
+        Actor actor;
+        Entity.BindToClosest<Actor>(transform, out actor);
+        if (actor)
+        {
+            physicsTargeter = actor.GetComponent<PhysicsTargeter>();
+            physicsTargeter.afterUpdate += UpdateGizmos;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (physicsTargeter)
+        {
+            physicsTargeter.afterUpdate -= UpdateGizmos;
+        }
     }
 
     private void UpdateGizmos()

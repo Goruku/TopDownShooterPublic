@@ -29,10 +29,21 @@ public class GunMounter : MonoBehaviour
         shootingManager.transform.rotation = new Quaternion();
     }
 
-    private void OnTransformChildrenChanged()
+    private void OnEnable()
     {
         var shootingManagers = transform.GetComponentsInChildren<ShootingManager>();
         if (shootingManagers.Length <= 0) return;
         shootingManager = shootingManagers[0];
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
+    private void OnTransformChildrenChanged()
+    {
+        OnDisable();
+        OnEnable();
     }
 }

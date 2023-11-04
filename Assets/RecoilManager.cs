@@ -21,6 +21,11 @@ public class RecoilManager : MonoBehaviour
 
     private void OnEnable()
     {
+        var owner = _shootingManager.owner;
+        if (owner)
+        {
+            physicsObject = owner.GetComponent<Rigidbody2D>();
+        }
         _shootingManager.afterShot += ApplyRecoil;
     }
 
@@ -31,11 +36,8 @@ public class RecoilManager : MonoBehaviour
 
     private void OnTransformParentChanged()
     {
-        var owner = _shootingManager.owner;
-        if (owner)
-        {
-            physicsObject = owner.GetComponent<Rigidbody2D>();
-        }
+        OnDisable();
+        OnEnable();
     }
 
     public void ApplyRecoil(Transform pointerLocation)
