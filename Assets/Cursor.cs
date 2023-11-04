@@ -15,16 +15,9 @@ public class Cursor : MonoBehaviour
 
     private void OnEnable()
     {
-        Agent agent;
-        Entity.BindToClosest<Agent>(transform, out agent);
-        if (agent)
-        {
-            playerInput = agent.playerInput;
-            playerInput.actions["Look"].started += ControlCursor;
-            playerInput.actions["Look"].performed += ControlCursor;
-            playerInput.actions["Look"].canceled += ControlCursor;
-        }
-        FetchActiveCamera();
+        playerInput.actions["Look"].started += ControlCursor;
+        playerInput.actions["Look"].performed += ControlCursor;
+        playerInput.actions["Look"].canceled += ControlCursor;
     }
 
     private void OnDisable()
@@ -32,18 +25,12 @@ public class Cursor : MonoBehaviour
         playerInput.actions["Look"].started -= ControlCursor;
         playerInput.actions["Look"].performed -= ControlCursor;
         playerInput.actions["Look"].canceled -= ControlCursor;
-        playerInput = null;
     }
 
     private void OnTransformParentChanged()
     {
         OnDisable();
         OnEnable();
-    }
-
-    private void FetchActiveCamera()
-    { 
-        activeCamera = PlayerInputManager.instance.GetComponent<ActiveCamera>().camera;
     }
 
     void ControlCursor(InputAction.CallbackContext callbackContext)
