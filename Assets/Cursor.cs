@@ -35,7 +35,7 @@ public class Cursor : MonoBehaviour
 
     void ControlCursor(InputAction.CallbackContext callbackContext)
     {
-        if (playerInput.currentControlScheme != "Mouse&Keyboard")
+        if (playerInput.currentControlScheme == "Keyboard&Mouse")
         {
             var targetPos = activeCamera.ScreenToWorldPoint(new Vector3(Mouse.current.position.value.x,
                 Mouse.current.position.value.y,
@@ -44,7 +44,6 @@ public class Cursor : MonoBehaviour
         }
         else
         {
-            Debug.Log("Controller input");
             var lookVector = callbackContext.ReadValue<Vector2>();
             transform.position += (Vector3) lookVector.normalized * cursorSpeed;
         }

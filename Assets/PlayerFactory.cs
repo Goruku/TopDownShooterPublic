@@ -30,6 +30,7 @@ public class PlayerFactory : MonoBehaviour
         aimingGizmos.cursor.activeCamera = activeCamera;
         aimingGizmos.physicsTargeter = physicsTargeter;
         aimingGizmos.gameObject.SetActive(true);
+        Debug.Log(playerInput.currentControlScheme);
     }
 }
 
