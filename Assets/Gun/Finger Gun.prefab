@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4674845377515402613}
   - component: {fileID: 7009503943376478087}
   - component: {fileID: 4153142562973158697}
+  - component: {fileID: -5291020385587756893}
   m_Layer: 0
   m_Name: Finger Gun
   m_TagString: Untagged
@@ -279,3 +280,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124ad5443ba8cb94eadea1867d01ff48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-5291020385587756893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5420884169342221249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f67b4577dccfa814bb1e651132c24fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointerLocation: {fileID: 0}
+  pointerPrefab: {fileID: 6655615988247109726, guid: e62039aafeca09248986680766996840, type: 3}
