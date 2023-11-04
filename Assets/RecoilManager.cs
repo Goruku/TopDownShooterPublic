@@ -30,6 +30,16 @@ public class RecoilManager : MonoBehaviour
         _shootingManager.afterShot -= ApplyRecoil;
     }
 
+    private void OnTransformParentChanged()
+    {
+        var owner = _shootingManager.owner;
+        if (owner)
+        {
+            physicsObject = owner.GetComponent<Rigidbody2D>();
+        }
+        physicsObject = GetComponent<Rigidbody2D>();
+    }
+
     public void ApplyRecoil(Transform pointerLocation)
     {
         if (mouseRecoilPattern)

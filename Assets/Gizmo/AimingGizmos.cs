@@ -1,7 +1,6 @@
 using Cinemachine;
 using UnityEngine;
 
-[RequireComponent(typeof(PhysicsTargeter))]
 public class AimingGizmos : MonoBehaviour
 {
 
@@ -17,7 +16,7 @@ public class AimingGizmos : MonoBehaviour
     {
         _trackerRenderer = distanceTracker.GetComponent<SpriteRenderer>();
         physicsTargeter = GetComponent<PhysicsTargeter>();
-        physicsTargeter.afterFixedUpdate += UpdateGizmos;
+        physicsTargeter.afterUpdate += UpdateGizmos;
     }
 
     private void UpdateGizmos()

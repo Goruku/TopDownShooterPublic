@@ -104,8 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 0.15
   lastShot: 0
-  ready: 0
-  playerOwned: 0
+  owner: {fileID: 0}
   fireLocation: {fileID: 8055737655300606783}
 --- !u!114 &7445047493531178596
 MonoBehaviour:

@@ -22,6 +22,7 @@ public class PhysicsTargeter : MonoBehaviour
     public delegate void PhysicsTargeterUpdate();
 
     public PhysicsTargeterUpdate afterFixedUpdate = () => {};
+    public PhysicsTargeterUpdate afterUpdate = () => {};
     
     private Rigidbody2D _rigidBody2D;
     private Vector3 _targetingVector;
@@ -46,6 +47,11 @@ public class PhysicsTargeter : MonoBehaviour
             targetingRange.minRange = 0;
             targetingRange.maxRange = float.MaxValue;
         }
+    }
+
+    private void Update()
+    {
+        afterUpdate();
     }
 
     void FixedUpdate()
