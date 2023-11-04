@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 0}
-  cursorSpeed: 0.03
+  cursorSpeed: 0.3
   activeCamera: {fileID: 0}
 --- !u!1 &8534126041159829080
 GameObject:
