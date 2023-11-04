@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8882033366741878382}
   - component: {fileID: 4674845377515402613}
   - component: {fileID: 7009503943376478087}
+  - component: {fileID: 4153142562973158697}
   m_Layer: 0
   m_Name: Finger Gun
   m_TagString: Untagged
@@ -103,8 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldown: 1
   lastShot: 0
-  ready: 0
-  playerOwned: 0
+  owner: {fileID: 0}
   fireLocation: {fileID: 3037060380145953141}
 --- !u!114 &7464886471875374309
 MonoBehaviour:
@@ -267,3 +267,15 @@ MonoBehaviour:
   mouseRecoilPattern: {fileID: 0}
   physicsRecoilPattern: {fileID: 11400000, guid: 32be142e6259c9b418b238b0ff0216de, type: 2}
   physicsObject: {fileID: 0}
+--- !u!114 &4153142562973158697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5420884169342221249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124ad5443ba8cb94eadea1867d01ff48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

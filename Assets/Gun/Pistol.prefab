@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2729863848294132698}
   - component: {fileID: 5958606395925184493}
   - component: {fileID: 8381965109715552442}
+  - component: {fileID: 5254309438936504205}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -281,3 +282,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 1.2
+--- !u!114 &5254309438936504205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8883052042415664880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 124ad5443ba8cb94eadea1867d01ff48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

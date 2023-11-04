@@ -25,7 +25,7 @@ public class ShootingManager : MonoBehaviour
     private void OnTransformParentChanged()
     {
         OnDisable();
-        Actor.BindToClosestActor(transform, out owner);
+        Entity.BindToClosest(transform, out owner);
         OnEnable();
     }
 

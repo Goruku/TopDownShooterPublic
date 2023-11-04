@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(Agent))]
 public class PlayerGrabber : MonoBehaviour
 {
-    
-    public PlayerInput playerInput;
+    public Actor actor;
     public Collider2D pickupHitbox;
     public GunMounter gunMounter;
     
@@ -26,12 +26,20 @@ public class PlayerGrabber : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.actions["PickUp"].performed += Grab;
+        Entity.BindToClosest<Actor>(transform, out actor);
+
+        if (actor is Agent agent)
+        {
+            agent.playerInput.actions["PickUp"].performed += Grab;
+        }
     }
 
     private void OnDisable()
     {
-        playerInput.actions["PickUp"].performed -= Grab;
+        if (actor is Agent agent)
+        {
+            agent.playerInput.actions["PickUp"].performed -= Grab;
+        }
     }
 
     void Grab(InputAction.CallbackContext callbackContext)
