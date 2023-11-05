@@ -8,8 +8,7 @@ using UnityEngine;
 public class BulletFactory : MonoBehaviour
 {
     private ShootingManager _shootingManager;
-    public GameObject bulletPrefab;
-    public float bulletSpeed;
+    public GunFrame gunFrame;
     
     public AudioSource audioSource;
     
@@ -26,11 +25,28 @@ public class BulletFactory : MonoBehaviour
 
     void CreateBullets(Transform fireLocation)
     {
-        var newBullet = Instantiate(bulletPrefab, fireLocation.position, fireLocation.rotation);
-        newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*bulletSpeed;
+        var shot = gunFrame.ConsumeNextShot();
+
+        if (shot.misfire && audioSource)
+        {
+            audioSource.PlayOneShot(gunFrame.jam);
+            return;
+        }
         
-        if (audioSource)
-            audioSource.PlayOneShot(audioSource.clip);
+        if (shot.empty)
+        {
+            audioSource.PlayOneShot(gunFrame.emptySound);
+            return;
+        }
+
+        foreach (var bullet in shot.bullets)
+        {
+            var newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
+            newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*shot.velocity;
+        }
+        
+        if (audioSource && gunFrame.fireSound)
+            audioSource.PlayOneShot(gunFrame.fireSound);
     }
 
     // Update is called once per frame
