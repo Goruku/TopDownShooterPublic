@@ -21,15 +21,20 @@ public class PhysicsRecoilPattern : ScriptableObject
     
     public PhysicsRecoil GetNext()
     {
+        return GetNext(recoilRandomness);
+    }
+
+    public PhysicsRecoil GetNext(float randomness)
+    {
         if (currentIndex >= recoils.Count - 1 && currentIndex >= torques.Count - 1)
             currentIndex = 0;
         else
             currentIndex += 1;
         return new PhysicsRecoil(){
             force = currentIndex < recoils.Count ? recoils[currentIndex]
-                                                    * recoilRandomnessSpread.Evaluate(Random.Range(0, recoilRandomness)) : new Vector2(),
+                                                   * recoilRandomnessSpread.Evaluate(Random.Range(0, randomness)) : new Vector2(),
             torque = currentIndex < torques.Count ? torques[currentIndex]
-                                                    * torqueRandomnessSpread.Evaluate(Random.Range(0, recoilRandomness)): 0
+                                                    * torqueRandomnessSpread.Evaluate(Random.Range(0, randomness)): 0
         };
     }
 }

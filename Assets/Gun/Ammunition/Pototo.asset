@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 818cea865dd747c4eb72b9542e3ae359, type: 3}
+  m_Name: Pototo
+  m_EditorClassIdentifier: 
+  propellant: {fileID: 0}
+  caliber: {fileID: 0}
+  bulletRandomness: 0
+  bullets: []

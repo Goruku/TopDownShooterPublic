@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(ShootingManager))]
 public class BulletFactory : MonoBehaviour
 {
@@ -15,12 +16,12 @@ public class BulletFactory : MonoBehaviour
     private void OnEnable()
     {
         _shootingManager = GetComponent<ShootingManager>();
-        _shootingManager.duringShot += CreateBullets;
+        _shootingManager.shotTrigger += CreateBullets;
     }
 
     private void OnDisable()
     {
-        _shootingManager.duringShot -= CreateBullets;
+        _shootingManager.shotTrigger -= CreateBullets;
     }
 
     void CreateBullets(Transform fireLocation)
@@ -30,10 +31,11 @@ public class BulletFactory : MonoBehaviour
         if (shot.misfire && audioSource)
         {
             audioSource.PlayOneShot(gunFrame.jam);
+            //misfire firing effect?
             return;
         }
         
-        if (shot.empty)
+        if (shot.empty && audioSource)
         {
             audioSource.PlayOneShot(gunFrame.emptySound);
             return;
@@ -44,6 +46,8 @@ public class BulletFactory : MonoBehaviour
             var newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
             newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*shot.velocity;
         }
+
+        _shootingManager.firingEffect(fireLocation, shot);
         
         if (audioSource && gunFrame.fireSound)
             audioSource.PlayOneShot(gunFrame.fireSound);

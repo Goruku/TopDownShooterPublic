@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,14 @@ public class GunFrame : MonoBehaviour
     public AudioClip emptySound;
     public AudioClip jam;
     public float baseVelocityMultiplier;
+    public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f};
+
+    [Serializable]
+    public struct GunRandomness
+    {
+        public float gunRandomness;
+        public float gunIncidence;
+    }
 
     public List<GunPart> gunParts;
 
@@ -22,14 +31,17 @@ public class GunFrame : MonoBehaviour
         public bool jam;
         public List<GameObject> bullets;
         public float velocity;
+        public float randomness;
     }
     
     public float CalculateBulletVelocity(Ammunition ammunition)
     {
-        float externalPush = 0;
+        float push = 0;
         if (externalPropellant)
-            externalPush = externalPropellant.EffectivePush();
-        var individualPush = (externalPush + ammunition.propellant.EffectivePush()) / ammunition.bullets.Count;
+            push = externalPropellant.EffectivePush();
+        if (ammunition.propellant)
+            push += ammunition.propellant.EffectivePush();
+        var individualPush = push / ammunition.bullets.Count;
         var scaledPush = individualPush * baseVelocityMultiplier;
         foreach (var gunPart in gunParts)
         {
@@ -52,7 +64,8 @@ public class GunFrame : MonoBehaviour
             misfire = ammunition.caliber != caliber,
             jam = false,
             bullets = GetBullets(ammunition),
-            velocity = CalculateBulletVelocity(ammunition)
+            velocity = CalculateBulletVelocity(ammunition),
+            randomness = (gunRandomness.gunIncidence)*gunRandomness.gunRandomness + (1- gunRandomness.gunIncidence)*ammunition.bulletRandomness
         };
         magazine.Remove(ammunition);
         return shot;

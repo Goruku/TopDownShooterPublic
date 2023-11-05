@@ -13,8 +13,10 @@ public class ShootingManager : MonoBehaviour
     
     public Transform fireLocation;
 
-    public FiringAction duringShot = location => {};
-    public FiringAction afterShot = location => {};
+    public FiringAction shotTrigger = location => {};
+    public FiringEffect firingEffect = (location, shot) => {};
+    public AimAction aimStarted;
+    public AimAction aimEnded;
     
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,8 @@ public class ShootingManager : MonoBehaviour
         if (owner is Agent agent)
         {
             agent.playerInput.actions["Fire"].performed += AttemptFiring;
+            agent.playerInput.actions["Aim"].started += AimStart;
+            agent.playerInput.actions["Aim"].canceled += AimEnd;
         }
     }
 
@@ -42,6 +46,8 @@ public class ShootingManager : MonoBehaviour
         if (owner is Agent agent)
         {
             agent.playerInput.actions["Fire"].performed -= AttemptFiring;
+            agent.playerInput.actions["Aim"].started -= AimStart;
+            agent.playerInput.actions["Aim"].canceled -= AimEnd;
         }
     }
 
@@ -54,10 +60,23 @@ public class ShootingManager : MonoBehaviour
     void Fire()
     {
         lastShot = Time.fixedTime;
-        duringShot(fireLocation);
-        afterShot(fireLocation);
+        shotTrigger(fireLocation);
+    }
+
+    void AimStart(InputAction.CallbackContext callbackContext)
+    {
+        aimStarted();
+    }
+
+    void AimEnd(InputAction.CallbackContext callbackContext)
+    {
+        aimEnded();
     }
 
 }
 
 public delegate void FiringAction(Transform pointerLocation);
+
+public delegate void FiringEffect(Transform pointerLocation, GunFrame.Shot shot);
+
+public delegate void AimAction();

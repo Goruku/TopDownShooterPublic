@@ -240,6 +240,7 @@ MonoBehaviour:
   target: {fileID: 0}
   aimingSensitivityProfile: {fileID: 11400000, guid: 05c2125a53ceac14d8e15358ce106022, type: 2}
   targetingRange: {fileID: 11400000, guid: 4dc2e29ffcfc16b419c250d879ebfd85, type: 2}
+  defaultTargetingRange: {fileID: 11400000, guid: 4dc2e29ffcfc16b419c250d879ebfd85, type: 2}
   distanceDifferential: 1
   lookDifferential: 0
   counterClockwise: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
   physicsTargeter: {fileID: 5247693877552081891}
   trueTarget: {fileID: 0}
   trueTargetLineRenderer: {fileID: 0}
+  cursor: {fileID: 0}
   distanceTracker: {fileID: 0}
 --- !u!114 &2344030408440348849
 MonoBehaviour:
@@ -351,7 +353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1272391caa4454da27afd8036dc2a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 6862492874498450231}
+  actor: {fileID: 0}
   pickupHitbox: {fileID: 1438294483989913446}
   gunMounter: {fileID: 8359417470969693292}
 --- !u!114 &4614173323159401921
@@ -366,7 +368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f504664f662ab0542bbc1942685fe0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInput: {fileID: 6862492874498450231}
 --- !u!114 &6862492874498450231
 MonoBehaviour:
   m_ObjectHideFlags: 0
