@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class GunFrame : MonoBehaviour
+[RequireComponent(typeof(ShootingManager))]
+public class GunFrame : Entity
 {
+    public ShootingManager shootingManager;
     public Propellant externalPropellant;
     public Caliber caliber;
     public List<Ammunition> magazine;
@@ -13,7 +16,14 @@ public class GunFrame : MonoBehaviour
     public AudioClip emptySound;
     public AudioClip jam;
     public float baseVelocityMultiplier;
-    public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f};
+    public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f}; 
+
+    public List<GunPart> gunParts;
+
+    private void Awake()
+    {
+        shootingManager = GetComponent<ShootingManager>();
+    }
 
     [Serializable]
     public struct GunRandomness
@@ -21,8 +31,6 @@ public class GunFrame : MonoBehaviour
         public float gunRandomness;
         public float gunIncidence;
     }
-
-    public List<GunPart> gunParts;
 
     public struct Shot
     {

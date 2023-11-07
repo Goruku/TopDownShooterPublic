@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 818cea865dd747c4eb72b9542e3ae359, type: 3}
-  m_Name: 9mm
+  m_Name: _308
   m_EditorClassIdentifier: 
-  propellant: {fileID: 11400000, guid: 0338ebcb4eb9ab1498740641dd3fb08d, type: 2}
-  caliber: {fileID: 11400000, guid: 7a0d21955cdb4244cb1b4528d3c07aa7, type: 2}
-  bulletRandomness: 0.2
+  propellant: {fileID: 11400000, guid: 02ffb6d8ffa14ce4290d90c898ccc50a, type: 2}
+  caliber: {fileID: 11400000, guid: 044cf8d4e681e2b4593bf336c384abf6, type: 2}
+  bulletRandomness: 0.4
   bullets:
   - {fileID: 245111514932939356, guid: 98be3b5c255b479489e27fca7338b41b, type: 3}

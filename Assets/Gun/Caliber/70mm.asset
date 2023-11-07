@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2beb8ea0f018b0f4697910356bb1521d, type: 3}
   m_Name: 70mm
   m_EditorClassIdentifier: 
-  diameter: 0
+  diameter: 70

@@ -7,29 +7,34 @@ using UnityEngine;
 public class Sight : GunPart
 {
     public TargetingRange targetingRange;
-    public ShootingManager shootingManager;
 
-    private void OnEnable()
+    private new void OnEnable()
     {
-        shootingManager.aimStarted += SwapToSight;
-        shootingManager.aimEnded += SwapBack;
+        base.OnEnable();
+        gunFrame.shootingManager.aimStarted += SwapToSight;
+        gunFrame.shootingManager.aimEnded += SwapBack;
     }
 
-    private void OnDisable()
+    private new void OnDisable()
     {
+        base.OnDisable();
         SwapBack();
-        shootingManager.aimStarted -= SwapToSight;
-        shootingManager.aimEnded -= SwapBack;
+        gunFrame.shootingManager.aimStarted -= SwapToSight;
+        gunFrame.shootingManager.aimEnded -= SwapBack;
     }
 
     private void SwapToSight()
     {
-        shootingManager.owner.GetComponent<PhysicsTargeter>().targetingRange = targetingRange;
+        if (gunFrame.shootingManager.owner)
+            gunFrame.shootingManager.owner.GetComponent<PhysicsTargeter>().targetingRange = targetingRange;
     }
 
     private void SwapBack()
     {
-        var physicsTargeter = shootingManager.owner.GetComponent<PhysicsTargeter>();
-        physicsTargeter.targetingRange = physicsTargeter.defaultTargetingRange;
+        if (gunFrame.shootingManager.owner)
+        {
+            var physicsTargeter = gunFrame.shootingManager.owner.GetComponent<PhysicsTargeter>();
+            physicsTargeter.targetingRange = physicsTargeter.defaultTargetingRange;
+        }
     }
 }

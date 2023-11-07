@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2beb8ea0f018b0f4697910356bb1521d, type: 3}
-  m_Name: 9mm
+  m_Name: 7.82mm
   m_EditorClassIdentifier: 
-  diameter: 9
+  diameter: 7.82

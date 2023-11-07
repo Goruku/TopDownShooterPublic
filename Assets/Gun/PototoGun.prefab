@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33f35e2852146543b8fdfd7e1d4b317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootingManager: {fileID: 4112929753566607641}
   externalPropellant: {fileID: 11400000, guid: b5f30e2a3d040a34680b1c208cbe7862, type: 2}
   caliber: {fileID: 0}
   magazine: []
