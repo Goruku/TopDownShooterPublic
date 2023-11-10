@@ -14,6 +14,8 @@ public class PhysicsTargeter : MonoBehaviour
     public AimingSensitivityProfile aimingSensitivityProfile;
     
     public TargetingRange targetingRange;
+    public TargetingRange defaultTargetingRange;
+
     public float distanceDifferential;
     public float lookDifferential;
     
@@ -56,6 +58,9 @@ public class PhysicsTargeter : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!targetingRange)
+            targetingRange = defaultTargetingRange;
+        
         if (!target) return;
         _targetingVector = target.position - transform.position;
         _currentRotation = transform.rotation;

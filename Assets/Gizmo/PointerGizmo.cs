@@ -14,7 +14,7 @@ public class PointerGizmo : MonoBehaviour
     private void OnEnable()
     {
         _shootingManager = GetComponent<ShootingManager>();
-        _shootingManager.duringShot += CreatePointer;
+        _shootingManager.shotTrigger += CreatePointer;
         Actor actor;
         Entity.BindToClosest<Actor>(transform, out actor);
         if (actor)
@@ -25,7 +25,7 @@ public class PointerGizmo : MonoBehaviour
 
     private void OnDisable()
     {
-        _shootingManager.duringShot -= CreatePointer;
+        _shootingManager.shotTrigger -= CreatePointer;
     }
 
     private void CreatePointer(Transform location)

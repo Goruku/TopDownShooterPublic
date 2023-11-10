@@ -26,12 +26,12 @@ public class RecoilManager : MonoBehaviour
         {
             physicsObject = owner.GetComponent<Rigidbody2D>();
         }
-        _shootingManager.afterShot += ApplyRecoil;
+        _shootingManager.firingEffect += ApplyRecoil;
     }
 
     private void OnDisable()
     {
-        _shootingManager.afterShot -= ApplyRecoil;
+        _shootingManager.firingEffect -= ApplyRecoil;
     }
 
     private void OnTransformParentChanged()
@@ -40,17 +40,17 @@ public class RecoilManager : MonoBehaviour
         OnEnable();
     }
 
-    public void ApplyRecoil(Transform pointerLocation)
+    public void ApplyRecoil(Transform pointerLocation, GunFrame.Shot shot)
     {
         if (mouseRecoilPattern)
         {
-            var recoil = mouseRecoilPattern.GetNext();
+            var recoil = mouseRecoilPattern.GetNext(shot.randomness);
             Mouse.current.WarpCursorPosition(Mouse.current.position.value + recoil);
         }
 
         if (physicsRecoilPattern && physicsObject)
         {
-            var recoil = physicsRecoilPattern.GetNext();
+            var recoil = physicsRecoilPattern.GetNext(shot.randomness);
             physicsObject.AddForce(physicsObject.transform.rotation*recoil.force);
             physicsObject.AddTorque(recoil.torque);
         }

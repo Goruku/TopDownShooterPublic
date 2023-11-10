@@ -14,12 +14,17 @@ public class MouseRecoilPattern : ScriptableObject
 
     public Vector2 GetNext()
     {
+        return GetNext(recoilRandomness);
+    }
+
+    public Vector2 GetNext(float randomness)
+    {
         if (recoilDeltas.Count <= 0) return new Vector2();
         if (!staticPattern) currentIndex = Random.Range(0, recoilDeltas.Count);
         if (currentIndex >= recoilDeltas.Count - 1)
             currentIndex = 0;
         else
             currentIndex += 1;
-        return recoilDeltas[currentIndex]*recoilRandomnessSpread.Evaluate(Random.Range(0, recoilRandomness));
+        return recoilDeltas[currentIndex]*recoilRandomnessSpread.Evaluate(Random.Range(0, randomness));
     }
 }

@@ -8,5 +8,6 @@ public class Ammunition : ScriptableObject
 {
     public Propellant propellant;
     public Caliber caliber;
-    [FormerlySerializedAs("bullet")] public List<GameObject> bullets;
+    public float bulletRandomness;
+    public List<GameObject> bullets;
 }
