@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7e1cfa2983069d418b334d581fa531c, type: 3}
   m_Name: CompressedAir
   m_EditorClassIdentifier: 
-  pushForce: 0
+  pushForce: 20

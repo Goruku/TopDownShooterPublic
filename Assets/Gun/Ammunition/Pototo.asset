@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Pototo
   m_EditorClassIdentifier: 
   propellant: {fileID: 0}
-  caliber: {fileID: 0}
-  bulletRandomness: 0
-  bullets: []
+  caliber: {fileID: 11400000, guid: 0efe9fad58586944c88497d2572b4b32, type: 2}
+  bulletRandomness: 1
+  bullets:
+  - {fileID: 237956249778027520, guid: de5125625efe5884f8d1070be8a1e60b, type: 3}

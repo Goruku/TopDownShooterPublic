@@ -15,8 +15,8 @@ public class ShootingManager : MonoBehaviour
 
     public FiringAction shotTrigger = location => {};
     public FiringEffect firingEffect = (location, shot) => {};
-    public AimAction aimStarted;
-    public AimAction aimEnded;
+    public AimAction aimStarted = () => {};
+    public AimAction aimEnded = () => {};
     
     // Start is called before the first frame update
     void Start()
