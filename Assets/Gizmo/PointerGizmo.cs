@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ShootingManager))]
+[RequireComponent(typeof(GunTrigger))]
 public class PointerGizmo : MonoBehaviour
 {
 
-    private ShootingManager _shootingManager;
+    private GunTrigger _gunTrigger;
     public Transform pointerLocation;
     public GameObject pointerPrefab;
 
     private void OnEnable()
     {
-        _shootingManager = GetComponent<ShootingManager>();
-        _shootingManager.shotTrigger += CreatePointer;
+        _gunTrigger = GetComponent<GunTrigger>();
+        //_gunTrigger.performed += CreatePointer;
         Actor actor;
         Entity.BindToClosest<Actor>(transform, out actor);
         if (actor)
@@ -25,7 +25,7 @@ public class PointerGizmo : MonoBehaviour
 
     private void OnDisable()
     {
-        _shootingManager.shotTrigger -= CreatePointer;
+        //_gunTrigger.performed -= CreatePointer;
     }
 
     private void CreatePointer(Transform location)

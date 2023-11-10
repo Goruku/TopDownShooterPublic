@@ -6,32 +6,32 @@ using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(ShootingManager))]
+[RequireComponent(typeof(GunBarrel))]
 public class RecoilManager : MonoBehaviour
 {
     public MouseRecoilPattern mouseRecoilPattern;
     public PhysicsRecoilPattern physicsRecoilPattern;
-    private ShootingManager _shootingManager;
+    public GunBarrel gunBarrel;
     public Rigidbody2D physicsObject;
 
     private void Awake()
     {
-        _shootingManager = GetComponent<ShootingManager>();
+        gunBarrel = GetComponent<GunBarrel>();
     }
 
     private void OnEnable()
     {
-        var owner = _shootingManager.owner;
+        var owner = gunBarrel.gunFrame.owner;
         if (owner)
         {
             physicsObject = owner.GetComponent<Rigidbody2D>();
         }
-        _shootingManager.firingEffect += ApplyRecoil;
+        gunBarrel.emptied += ApplyRecoil;
     }
 
     private void OnDisable()
     {
-        _shootingManager.firingEffect -= ApplyRecoil;
+        gunBarrel.emptied -= ApplyRecoil;
     }
 
     private void OnTransformParentChanged()
@@ -40,7 +40,7 @@ public class RecoilManager : MonoBehaviour
         OnEnable();
     }
 
-    public void ApplyRecoil(Transform pointerLocation, GunFrame.Shot shot)
+    public void ApplyRecoil(GunFrame.Shot shot, Transform pointerLocation)
     {
         if (mouseRecoilPattern)
         {

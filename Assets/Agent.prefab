@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd059ad672ac6af4ab67a5367c3995a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootingManager: {fileID: 6474717704476845105}
+  shootingManager: {fileID: 0}
 --- !u!1 &2327007947908604602
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +477,10 @@ PrefabInstance:
       propertyPath: physicsObject
       value: 
       objectReference: {fileID: 4250810768640125328}
+    - target: {fileID: 3868470761668333449, guid: 092a304287b3c50408ced768c3c88c2a, type: 3}
+      propertyPath: owner
+      value: 
+      objectReference: {fileID: 4614173323159401921}
     - target: {fileID: 5409287379829107672, guid: 092a304287b3c50408ced768c3c88c2a, type: 3}
       propertyPath: owner
       value: 
@@ -546,17 +550,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 092a304287b3c50408ced768c3c88c2a, type: 3}
---- !u!114 &6474717704476845105 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5409287379829107672, guid: 092a304287b3c50408ced768c3c88c2a, type: 3}
-  m_PrefabInstance: {fileID: 1354307250234183657}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66acaf77dfe257942bd119de82b1117c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &9007425701072045270 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8055737655300606783, guid: 092a304287b3c50408ced768c3c88c2a, type: 3}

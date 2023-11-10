@@ -1,37 +1,117 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-[RequireComponent(typeof(ShootingManager))]
-public class GunFrame : Entity
+public class GunFrame : Entity, ISerializationCallbackReceiver
 {
-    public ShootingManager shootingManager;
-    public Propellant externalPropellant;
-    public Caliber caliber;
-    public List<Ammunition> magazine;
-    public AudioClip fireSound;
-    public AudioClip emptySound;
-    public AudioClip jam;
-    public float baseVelocityMultiplier;
-    public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f}; 
+    public Actor owner;
+    public OwnerAction ownerWillChange = actor => {};
+    public OwnerAction ownerChanged = actor => {};
+    
+    public List<GunTrigger> triggers = new ();
+    public List<PropellantTank> propellantTanks = new ();
+    public List<GunChamber> chambers = new ();
+    public List<GunBarrel> barrels = new ();
+    public List<BulletFactory> bulletFactories = new ();
+    public List<GunPart> gunParts = new ();
 
-    public List<GunPart> gunParts;
+    public List<GunTrigger.TriggerChamberLink> triggerChamberLinks = new ();
+    public List<GunChamber.ChamberBarrelLink> chamberBarrelLinks = new ();
+    public List<GunBarrel.BarrelBulletFactoryLink> barrelBulletFactoryLinks = new ();
 
-    private void Awake()
+    public GunManagementType gunManagementType;
+    
+    private GunState gunState = new GunState();
+
+    private void OnTransformParentChanged()
     {
-        shootingManager = GetComponent<ShootingManager>();
+        ownerWillChange(owner);
+        Entity.BindToClosest(transform, out owner);
+        ownerChanged(owner);
     }
 
-    [Serializable]
-    public struct GunRandomness
+    public GunState GetState()
     {
-        public float gunRandomness;
-        public float gunIncidence;
+        return gunState;
+    }
+    
+    public void OnBeforeSerialize()
+    {
+        
     }
 
+    private void AutoAfterSerialize()
+    {
+        foreach (var link in triggerChamberLinks)
+        {
+            link.UnLink();
+        }
+        triggerChamberLinks.Clear();
+        var triggerChamberCount = triggers.Count <= chambers.Count
+            ? triggers.Count
+            : chambers.Count;
+        for (var i = 0; i < triggerChamberCount; i++)
+        {
+            if (!triggers[i]) continue;
+            triggerChamberLinks.Add(new GunTrigger.TriggerChamberLink
+            {
+                gunChamber = chambers[i],
+                gunTrigger = triggers[i],
+                triggerEventType = triggers[i].triggerEventType
+            });
+            triggerChamberLinks[i].Link();
+        }
+
+        foreach (var link in chamberBarrelLinks)
+        {
+            link.UnLink();
+        }
+        chamberBarrelLinks.Clear();
+        var chamberBarrelCount = chambers.Count <= barrels.Count
+            ? chambers.Count
+            : barrels.Count;
+        for (var i = 0; i < chamberBarrelCount; i++)
+        {
+            chamberBarrelLinks.Add(new GunChamber.ChamberBarrelLink
+            {
+                gunChamber = chambers[i],
+                gunBarrel = barrels[i],
+            });
+            chamberBarrelLinks[i].Link();
+        }
+        
+        foreach (var link in barrelBulletFactoryLinks)
+        {
+            link.UnLink();
+        }
+        barrelBulletFactoryLinks.Clear();
+        var barrelFactoryCount = barrels.Count <= bulletFactories.Count
+            ? barrels.Count
+            : bulletFactories.Count;
+        for (var i = 0; i < barrelFactoryCount; i++)
+        {
+            barrelBulletFactoryLinks.Add(new GunBarrel.BarrelBulletFactoryLink
+            {
+                gunBarrel = barrels[i],
+                bulletFactory = bulletFactories[i]
+            });
+            barrelBulletFactoryLinks[i].Link();
+        }
+    }
+
+    public void OnAfterDeserialize()
+    {
+        if (gunManagementType == GunManagementType.Auto)
+            AutoAfterSerialize();
+    }
+    
+    public struct GunState
+    {
+        
+    }
+    
     public struct Shot
     {
         public bool misfire;
@@ -40,42 +120,13 @@ public class GunFrame : Entity
         public List<GameObject> bullets;
         public float velocity;
         public float randomness;
-    }
-    
-    public float CalculateBulletVelocity(Ammunition ammunition)
-    {
-        float push = 0;
-        if (externalPropellant)
-            push = externalPropellant.EffectivePush();
-        if (ammunition.propellant)
-            push += ammunition.propellant.EffectivePush();
-        var individualPush = push / ammunition.bullets.Count;
-        var scaledPush = individualPush * baseVelocityMultiplier;
-        foreach (var gunPart in gunParts)
-        {
-            scaledPush *= gunPart.velocityMultiplier;
-        }
-        return scaledPush;
+        public AudioClip shotSound;
     }
 
-    public List<GameObject> GetBullets(Ammunition ammunition)
+    public enum GunManagementType
     {
-        return ammunition.bullets;
+        Auto
     }
 
-    public Shot ConsumeNextShot()
-    {
-        if (magazine.Count <= 0) return new Shot {empty = true};
-        var ammunition = magazine[0];
-        var shot = new Shot
-        {
-            misfire = ammunition.caliber != caliber,
-            jam = false,
-            bullets = GetBullets(ammunition),
-            velocity = CalculateBulletVelocity(ammunition),
-            randomness = (gunRandomness.gunIncidence)*gunRandomness.gunRandomness + (1- gunRandomness.gunIncidence)*ammunition.bulletRandomness
-        };
-        magazine.Remove(ammunition);
-        return shot;
-    }
+    public delegate void OwnerAction(Actor actor);
 }
