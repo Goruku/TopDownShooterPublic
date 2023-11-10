@@ -8,25 +8,25 @@ using UnityEngine.Serialization;
 public class PlayerMover : MonoBehaviour
 {
     public Rigidbody2D rigidBody2D;
-    public PlayerActionHub playerActionHub;
+    public PlayerInput playerInput;
 
     public bool isMoving;
-    [FormerlySerializedAs("stoppedMoving")] public bool shouldStop;
+    public bool shouldStop;
     public Vector2 velocityVector;
     public float movementSpeed;
 
     private void OnEnable()
     {
-        playerActionHub.move.started += StartMovement;
-        playerActionHub.move.performed += StartMovement;
-        playerActionHub.move.canceled += EndMovement;
+        playerInput.actions["Move"].started += StartMovement;
+        playerInput.actions["Move"].performed += StartMovement;
+        playerInput.actions["Move"].canceled += EndMovement;
     }
 
     private void OnDisable()
     {
-        playerActionHub.move.started -= StartMovement;
-        playerActionHub.move.performed -= StartMovement;
-        playerActionHub.move.canceled -= EndMovement;
+        playerInput.actions["Move"].started -= StartMovement;
+        playerInput.actions["Move"].performed -= StartMovement;
+        playerInput.actions["Move"].canceled -= EndMovement;
     }
 
     private void StartMovement(InputAction.CallbackContext callbackContext)

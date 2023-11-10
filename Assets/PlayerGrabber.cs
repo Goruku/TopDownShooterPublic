@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerGrabber : MonoBehaviour
 {
     
-    public PlayerActionHub playerActionHub;
+    public PlayerInput playerInput;
     public Collider2D pickupHitbox;
     public GunMounter gunMounter;
     
@@ -25,12 +26,12 @@ public class PlayerGrabber : MonoBehaviour
 
     private void OnEnable()
     {
-        playerActionHub.pickUp.performed += Grab;
+        playerInput.actions["PickUp"].performed += Grab;
     }
 
     private void OnDisable()
     {
-        playerActionHub.pickUp.performed -= Grab;
+        playerInput.actions["PickUp"].performed -= Grab;
     }
 
     void Grab(InputAction.CallbackContext callbackContext)
