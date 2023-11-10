@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PhysicsTargeter : MonoBehaviour
 {
-    public Rigidbody2D rigidBody2D;
     public Transform target;
     
     public float rotationMultiplier = 1;
@@ -23,6 +23,11 @@ public class PhysicsTargeter : MonoBehaviour
     
     public bool counterClockwise;
 
+    public delegate void PhysicsTargeterUpdate();
+
+    public PhysicsTargeterUpdate afterFixedUpdate = () => {};
+    
+    private Rigidbody2D _rigidBody2D;
     private Vector3 _targetingVector;
     private Quaternion _currentRotation;
     
@@ -34,14 +39,14 @@ public class PhysicsTargeter : MonoBehaviour
 
     private void Awake()
     {
-
+        _rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
     void FixedUpdate()
     {
         if (!target) return;
-        _targetingVector = target.position - rigidBody2D.transform.position;
-        _currentRotation = rigidBody2D.transform.rotation;
+        _targetingVector = target.position - transform.position;
+        _currentRotation = transform.rotation;
         
         var lookRotation = Quaternion.LookRotation(Vector3.forward, _targetingVector);
         //https://stackoverflow.com/questions/25498263/determining-if-quarternion-rotation-is-clockwise-or-counter-clockwise
@@ -57,7 +62,9 @@ public class PhysicsTargeter : MonoBehaviour
         rotationSpeed *= distanceCurve.Evaluate(distanceDifferential) * distanceMultiplier;
         //TODO: angular drag with distance curve?
 
-        rigidBody2D.angularVelocity += counterClockwise ? -rotationSpeed : rotationSpeed;
+        _rigidBody2D.angularVelocity += counterClockwise ? -rotationSpeed : rotationSpeed;
+
+        afterFixedUpdate();
     }
 
     public Vector3 GetTargetingVector()

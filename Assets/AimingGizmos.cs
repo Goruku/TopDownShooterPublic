@@ -1,16 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PhysicsTargeter))]
 public class AimingGizmos : MonoBehaviour
 {
 
-    [FormerlySerializedAs("playerAimer")] public  PhysicsTargeter physicsTargeter;
+    public PhysicsTargeter physicsTargeter;
     
     public CinemachineVirtualCamera virtualCamera;
     
@@ -22,15 +17,16 @@ public class AimingGizmos : MonoBehaviour
 
     private void Awake()
     {
-        physicsTargeter = GetComponent<PhysicsTargeter>();
         _trackerRenderer = distanceTracker.GetComponent<SpriteRenderer>();
+        physicsTargeter = GetComponent<PhysicsTargeter>();
+        physicsTargeter.afterFixedUpdate += UpdateGizmos;
     }
 
-    private void FixedUpdate()
+    private void UpdateGizmos()
     {
         var targetingVector = physicsTargeter.GetTargetingVector().normalized;
         
-        distanceTracker.position = (Vector3) physicsTargeter.rigidBody2D.position + physicsTargeter.maxRange*
+        distanceTracker.position = (Vector3) physicsTargeter.transform.position + physicsTargeter.maxRange*
             physicsTargeter.distanceDifferential*targetingVector.normalized;
         
         if (physicsTargeter.distanceDifferential < 1 && targetingVector.magnitude > physicsTargeter.minRange)
@@ -40,11 +36,11 @@ public class AimingGizmos : MonoBehaviour
         
         if (trueTarget)
         {
-            trueTarget.position = physicsTargeter.rigidBody2D.transform.position + physicsTargeter.GetCurrentRotation()
+            trueTarget.position = physicsTargeter.transform.position + physicsTargeter.GetCurrentRotation()
                 * (Vector3.up * (physicsTargeter.maxRange * physicsTargeter.distanceDifferential));
             if (trueTargetLineRenderer)
             {
-                trueTargetLineRenderer.SetPositions(new Vector3[]{physicsTargeter.rigidBody2D.position, trueTarget.position});
+                trueTargetLineRenderer.SetPositions(new Vector3[]{physicsTargeter.transform.position, trueTarget.position});
             }
         }
     }
