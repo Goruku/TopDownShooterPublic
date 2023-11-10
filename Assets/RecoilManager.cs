@@ -17,7 +17,6 @@ public class RecoilManager : MonoBehaviour
     private void Awake()
     {
         _shootingManager = GetComponent<ShootingManager>();
-        
     }
 
     private void OnEnable()
@@ -37,7 +36,6 @@ public class RecoilManager : MonoBehaviour
         {
             physicsObject = owner.GetComponent<Rigidbody2D>();
         }
-        physicsObject = GetComponent<Rigidbody2D>();
     }
 
     public void ApplyRecoil(Transform pointerLocation)
@@ -48,7 +46,7 @@ public class RecoilManager : MonoBehaviour
             Mouse.current.WarpCursorPosition(Mouse.current.position.value + recoil);
         }
 
-        if (physicsRecoilPattern)
+        if (physicsRecoilPattern && physicsObject)
         {
             var recoil = physicsRecoilPattern.GetNext();
             physicsObject.AddForce(physicsObject.transform.rotation*recoil.force);
