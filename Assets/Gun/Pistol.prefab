@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5958606395925184493}
   - component: {fileID: 8381965109715552442}
   - component: {fileID: 5254309438936504205}
+  - component: {fileID: 2948376685367520812}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -119,8 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad38e9d7cf934141a9a3bc9f4ac6d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 245111514932939356, guid: 98be3b5c255b479489e27fca7338b41b, type: 3}
-  bulletSpeed: 30
+  gunFrame: {fileID: 2948376685367520812}
   audioSource: {fileID: 3832772459916835371}
 --- !u!82 &3832772459916835371
 AudioSource:
@@ -294,3 +294,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124ad5443ba8cb94eadea1867d01ff48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2948376685367520812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8883052042415664880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33f35e2852146543b8fdfd7e1d4b317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  externalPropellant: {fileID: 0}
+  caliber: {fileID: 11400000, guid: 7a0d21955cdb4244cb1b4528d3c07aa7, type: 2}
+  magazine:
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  - {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
+  fireSound: {fileID: 8300000, guid: 9339134a9727c1a48be368477e220657, type: 3}
+  emptySound: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
+  jam: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
+  baseVelocityMultiplier: 1
+  gunParts: []
