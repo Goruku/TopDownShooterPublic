@@ -33,7 +33,7 @@ public class ShootingManager : MonoBehaviour
     {
         if (owner is Agent agent)
         {
-            agent.playerActionHub.fire.AddPerformed(AttemptFiring);
+            agent.playerActionHub.fire.performed += AttemptFiring;
         }
     }
 
@@ -41,7 +41,7 @@ public class ShootingManager : MonoBehaviour
     {
         if (owner is Agent agent)
         {
-            agent.playerActionHub.fire.RemovePerformed(AttemptFiring);
+            agent.playerActionHub.fire.performed -= AttemptFiring;
         }
     }
 
