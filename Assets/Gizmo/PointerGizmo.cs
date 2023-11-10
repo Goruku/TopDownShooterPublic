@@ -15,6 +15,12 @@ public class PointerGizmo : MonoBehaviour
     {
         _shootingManager = GetComponent<ShootingManager>();
         _shootingManager.duringShot += CreatePointer;
+        Actor actor;
+        Entity.BindToClosest<Actor>(transform, out actor);
+        if (actor)
+        {
+            pointerLocation = actor.GetComponent<PhysicsTargeter>().target;
+        }
     }
 
     private void OnDisable()

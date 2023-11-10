@@ -11,14 +11,20 @@ public class Cursor : MonoBehaviour
     public PlayerInput playerInput;
     public float cursorSpeed = 0.03f;
 
-    private Camera _camera;
+    public Camera activeCamera;
 
     private void OnEnable()
     {
+        Agent agent;
+        Entity.BindToClosest<Agent>(transform, out agent);
+        if (agent)
+        {
+            playerInput = agent.playerInput;
+            playerInput.actions["Look"].started += ControlCursor;
+            playerInput.actions["Look"].performed += ControlCursor;
+            playerInput.actions["Look"].canceled += ControlCursor;
+        }
         FetchActiveCamera();
-        playerInput.actions["Look"].started += ControlCursor;
-        playerInput.actions["Look"].performed += ControlCursor;
-        playerInput.actions["Look"].canceled += ControlCursor;
     }
 
     private void OnDisable()
@@ -26,20 +32,27 @@ public class Cursor : MonoBehaviour
         playerInput.actions["Look"].started -= ControlCursor;
         playerInput.actions["Look"].performed -= ControlCursor;
         playerInput.actions["Look"].canceled -= ControlCursor;
+        playerInput = null;
+    }
+
+    private void OnTransformParentChanged()
+    {
+        OnDisable();
+        OnEnable();
     }
 
     private void FetchActiveCamera()
     { 
-        _camera = PlayerInputManager.instance.GetComponent<ActiveCamera>().camera;
+        activeCamera = PlayerInputManager.instance.GetComponent<ActiveCamera>().camera;
     }
 
     void ControlCursor(InputAction.CallbackContext callbackContext)
     {
         if (playerInput.currentControlScheme != "Mouse&Keyboard")
         {
-            var targetPos = _camera.ScreenToWorldPoint(new Vector3(Mouse.current.position.value.x,
+            var targetPos = activeCamera.ScreenToWorldPoint(new Vector3(Mouse.current.position.value.x,
                 Mouse.current.position.value.y,
-                _camera.nearClipPlane));
+                activeCamera.nearClipPlane));
             transform.position = new Vector3(targetPos.x, targetPos.y, 0);
         }
         else
