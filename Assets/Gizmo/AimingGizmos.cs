@@ -9,6 +9,8 @@ public class AimingGizmos : MonoBehaviour
     
     public Transform trueTarget;
     public LineRenderer trueTargetLineRenderer;
+
+    public Cursor cursor;
     
     public Transform distanceTracker;
     private SpriteRenderer _trackerRenderer;
@@ -20,21 +22,12 @@ public class AimingGizmos : MonoBehaviour
 
     private void OnEnable()
     {
-        Actor actor;
-        Entity.BindToClosest<Actor>(transform, out actor);
-        if (actor)
-        {
-            physicsTargeter = actor.GetComponent<PhysicsTargeter>();
-            physicsTargeter.afterUpdate += UpdateGizmos;
-        }
+        physicsTargeter.afterUpdate += UpdateGizmos;
     }
 
     private void OnDisable()
     {
-        if (physicsTargeter)
-        {
-            physicsTargeter.afterUpdate -= UpdateGizmos;
-        }
+        physicsTargeter.afterUpdate -= UpdateGizmos;
     }
 
     private void UpdateGizmos()
