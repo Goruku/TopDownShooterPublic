@@ -1,36 +1,40 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraAimer : MonoBehaviour
 {
-    
-    public InputActionAsset inputs;
+    public PlayerInput playerInput;
 
     public CinemachineVirtualCamera virtualCamera;
     public Transform aimTarget;
     public Transform regularTarget;
-    
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
-        
+        playerInput.actions["Aim"].started += StartAim;
+        playerInput.actions["Aim"].canceled += EndAim;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        if (inputs.actionMaps[0]["Aim"].IsPressed())
-        {
-            virtualCamera.Follow = aimTarget;
-            virtualCamera.LookAt = aimTarget;
-        }
-        else
-        {
-            virtualCamera.Follow = regularTarget;
-            virtualCamera.LookAt = regularTarget;
-        }
+        playerInput.actions["Aim"].started -= StartAim;
+        playerInput.actions["Aim"].canceled -= EndAim;
+    }
+
+    void StartAim(InputAction.CallbackContext callbackContext)
+    {
+        virtualCamera.Follow = aimTarget;
+        virtualCamera.LookAt = aimTarget;
+    }
+
+    void EndAim(InputAction.CallbackContext callbackContext)
+    {
+        virtualCamera.Follow = regularTarget;
+        virtualCamera.LookAt = regularTarget;
     }
 }
