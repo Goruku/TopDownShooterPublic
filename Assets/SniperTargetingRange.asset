@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a4d41c361a82f14db1c193e88c1600f, type: 3}
-  m_Name: DefaultTargetingRange
+  m_Name: SniperTargetingRange
   m_EditorClassIdentifier: 
-  minRange: 1
-  maxRange: 10
+  minRange: 0
+  maxRange: 0

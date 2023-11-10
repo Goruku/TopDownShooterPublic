@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3832772459916835371}
   - component: {fileID: 2729863848294132698}
   - component: {fileID: 5958606395925184493}
+  - component: {fileID: 8381965109715552442}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Untagged
@@ -104,6 +105,7 @@ MonoBehaviour:
   cooldown: 0.15
   lastShot: 0
   ready: 0
+  playerOwned: 0
   fireLocation: {fileID: 8055737655300606783}
 --- !u!114 &7445047493531178596
 MonoBehaviour:
@@ -245,3 +247,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pointerLocation: {fileID: 0}
   pointerPrefab: {fileID: 5875033480886792975, guid: ac1bff8cb970b7f4f8abd635ca0c7cd8, type: 3}
+--- !u!58 &8381965109715552442
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8883052042415664880}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.2
