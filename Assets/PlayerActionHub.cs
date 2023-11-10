@@ -8,6 +8,7 @@ public class PlayerActionHub : MonoBehaviour
 {
     public HubAction move;
     public HubAction pickUp;
+    public HubAction fire;
 
     [Serializable]
     public struct HubAction

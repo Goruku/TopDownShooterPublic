@@ -9,8 +9,7 @@ public class ShootingManager : MonoBehaviour
 
     public float cooldown;
     public float lastShot;
-    public bool ready = false;
-    public bool playerOwned;
+    public Actor owner;
     
     public Transform fireLocation;
 
@@ -23,31 +22,38 @@ public class ShootingManager : MonoBehaviour
         lastShot = Time.time;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTransformParentChanged()
     {
-        AttemptFiring();
+        OnDisable();
+        Actor.BindToClosestActor(transform, out owner);
+        OnEnable();
     }
 
-    public void AttemptFiring()
+    private void OnEnable()
     {
-        if (playerOwned && Mouse.current.leftButton.isPressed)
+        if (owner is Agent agent)
         {
-            if (lastShot + cooldown <= Time.time)
-                ready = true;
+            agent.playerActionHub.fire.AddPerformed(AttemptFiring);
         }
     }
 
-    private void FixedUpdate()
+    private void OnDisable()
     {
-        if (!ready) return;
-        Fire();
+        if (owner is Agent agent)
+        {
+            agent.playerActionHub.fire.RemovePerformed(AttemptFiring);
+        }
+    }
+
+    public void AttemptFiring(InputAction.CallbackContext callbackContext)
+    {
+        if (lastShot + cooldown <= Time.time)
+            Fire();
     }
 
     void Fire()
     {
         lastShot = Time.fixedTime;
-        ready = false;
         duringShot(fireLocation);
         afterShot(fireLocation);
     }
