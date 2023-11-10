@@ -10,16 +10,13 @@ using UnityEngine.Serialization;
 public class PhysicsTargeter : MonoBehaviour
 {
     public Transform target;
-    
-    public float rotationMultiplier = 1;
-    public AnimationCurve rotationCurve;
-    public float lookDifferential;
+
+    public AimingSensitivityProfile aimingSensitivityProfile;
     
     public float minRange;
     public float maxRange;
-    public float distanceMultiplier = 1;
-    public AnimationCurve distanceCurve;
     public float distanceDifferential;
+    public float lookDifferential;
     
     public bool counterClockwise;
 
@@ -55,11 +52,13 @@ public class PhysicsTargeter : MonoBehaviour
         //https://math.stackexchange.com/questions/90081/quaternion-distance
         var innerProduct = Quaternion.Dot(lookRotation, _currentRotation);
         lookDifferential = 1 - innerProduct*innerProduct;
-        var rotationSpeed = rotationCurve.Evaluate(lookDifferential) * rotationMultiplier;
+        var rotationSpeed = aimingSensitivityProfile.rotationCurve.Evaluate(lookDifferential) *
+                            aimingSensitivityProfile.rotationMultiplier;
 
         var targetingVectorMagnitude = _targetingVector.magnitude;
         distanceDifferential = Mathf.Clamp(targetingVectorMagnitude, minRange, maxRange)/maxRange;
-        rotationSpeed *= distanceCurve.Evaluate(distanceDifferential) * distanceMultiplier;
+        rotationSpeed *= aimingSensitivityProfile.distanceCurve.Evaluate(distanceDifferential) * 
+                         aimingSensitivityProfile.distanceMultiplier;
         //TODO: angular drag with distance curve?
 
         _rigidBody2D.angularVelocity += counterClockwise ? -rotationSpeed : rotationSpeed;
