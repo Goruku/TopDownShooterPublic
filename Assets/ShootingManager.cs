@@ -10,16 +10,12 @@ public class ShootingManager : MonoBehaviour
     public float cooldown;
     public float lastShot;
     public bool ready = false;
-    public Transform pointerLocation;
-    public GameObject pointerPrefab;
-
-    public float bulletSpeed;
-
-    public GameObject bulletPrefab;
+    public bool playerOwned;
+    
     public Transform fireLocation;
-    public AudioSource audioSource;
 
-    public RecoilManager recoilManager;
+    public FiringAction duringShot = location => {};
+    public FiringAction afterShot = location => {};
     
     // Start is called before the first frame update
     void Start()
@@ -30,7 +26,12 @@ public class ShootingManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mouse.current.leftButton.isPressed)
+        AttemptFiring();
+    }
+
+    public void AttemptFiring()
+    {
+        if (playerOwned && Mouse.current.leftButton.isPressed)
         {
             if (lastShot + cooldown <= Time.time)
                 ready = true;
@@ -47,14 +48,10 @@ public class ShootingManager : MonoBehaviour
     {
         lastShot = Time.fixedTime;
         ready = false;
-        if (pointerLocation)
-        {
-            Instantiate(pointerPrefab, pointerLocation.position, pointerLocation.rotation);
-        }
-        var newBullet = Instantiate(bulletPrefab, fireLocation.position, fireLocation.rotation);
-        newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*bulletSpeed;
-        audioSource.PlayOneShot(audioSource.clip);
-        recoilManager.ApplyRecoil();
+        duringShot(fireLocation);
+        afterShot(fireLocation);
     }
 
 }
+
+public delegate void FiringAction(Transform pointerLocation);
