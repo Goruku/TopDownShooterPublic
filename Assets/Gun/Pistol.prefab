@@ -75,7 +75,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.119
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -410,7 +410,7 @@ MonoBehaviour:
   gunFrame: {fileID: 3868470761668333449}
   externalPropellant: {fileID: 0}
   caliber: {fileID: 11400000, guid: 7a0d21955cdb4244cb1b4528d3c07aa7, type: 2}
-  round: {fileID: 0}
+  round: {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}
   fireSound: {fileID: 8300000, guid: 9339134a9727c1a48be368477e220657, type: 3}
   emptySound: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
   jam: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}

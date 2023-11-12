@@ -16,7 +16,8 @@ public class GunChamber : GunPart
     public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f};
 
     public ChamberEvent fed = (shot, ammunition, state) => {};
-    public ChamberEvent emptied = (shot, ammunition, state) => {};
+    public ChamberEvent fire = (shot, ammunition, state) => {Debug.Log("Fired");};
+    public ChamberEvent wasEmpty = (shot, ammunition, state) => {Debug.Log("Empty");};
     public ChamberEvent jammed = (shot, ammunition, state) => {};
 
     public List<GunPart> gunParts;
@@ -30,7 +31,7 @@ public class GunChamber : GunPart
 
     public ChamberEvent GetEvent(ChamberEventType chamberEventType) => chamberEventType switch
     {
-        ChamberEventType.Emptied => emptied,
+        ChamberEventType.Emptied => fire,
         ChamberEventType.Fed => fed,
         ChamberEventType.Jammed => jammed,
         _ => throw new ArgumentException()
@@ -61,7 +62,7 @@ public class GunChamber : GunPart
     {
         if (!round)
         {
-            emptied(new GunFrame.Shot {empty = true, shotSound = emptySound}, round, gunFrame.GetState());
+            wasEmpty(new GunFrame.Shot {empty = true, shotSound = emptySound}, round, gunFrame.GetState());
             return;
         }
         var shot = new GunFrame.Shot
@@ -73,7 +74,7 @@ public class GunChamber : GunPart
             randomness = (gunRandomness.gunIncidence)*gunRandomness.gunRandomness + (1- gunRandomness.gunIncidence)*round.bulletRandomness,
             shotSound = fireSound
         };
-        emptied(shot, round, gunFrame.GetState());
+        fire(shot, round, gunFrame.GetState());
         round = null;
     }
 
@@ -96,13 +97,13 @@ public class GunChamber : GunPart
         public void Link()
         {
             if (!gunChamber || !gunBarrel) return;
-            gunChamber.emptied += gunBarrel.FeedRound;
+            gunChamber.fire += gunBarrel.FeedRound;
         }
 
         public void UnLink()
         {
             if (!gunChamber || !gunBarrel) return;
-            gunChamber.emptied -= gunBarrel.FeedRound;
+            gunChamber.fire -= gunBarrel.FeedRound;
         }
     }
 }

@@ -6,8 +6,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class GunTrigger : GunPart
+public class GunTrigger : InteractibleGunPart
 {
+
+    protected override string DefaultPlayerAction
+    {
+        get => "Fire";
+    }
+    
     public TriggerEvent performed = state => {};
     public TriggerEvent started = state => {};
     public TriggerEvent canceled = state => {};
@@ -15,45 +21,9 @@ public class GunTrigger : GunPart
     
     public delegate void TriggerEvent(GunFrame.GunState gunState);
 
-    public new void OnEnable()
-    {
-        base.OnEnable();
-        AttemptBindFire(gunFrame.owner);
-        gunFrame.ownerWillChange += AttemptUnbindFire;
-        gunFrame.ownerChanged += AttemptBindFire;
-    }
-
-    public new void OnDisable()
-    {
-        base.OnDisable();
-        AttemptUnbindFire(gunFrame.owner);
-        gunFrame.ownerWillChange -= AttemptUnbindFire;
-        gunFrame.ownerChanged -= AttemptBindFire;
-    }
-
-    private void AttemptBindFire(Actor actor)
-    {
-        if (actor is Agent agent)
-        {
-            agent.playerInput.actions["Fire"].performed += BindPerformed;
-            agent.playerInput.actions["Fire"].started += BindStarted;
-            agent.playerInput.actions["Fire"].canceled += BindCanceled;
-        }
-    }
-
-    private void AttemptUnbindFire(Actor actor)
-    {
-        if (actor is Agent agent)
-        {
-            agent.playerInput.actions["Fire"].performed -= BindPerformed;
-            agent.playerInput.actions["Fire"].started -= BindStarted;
-            agent.playerInput.actions["Fire"].canceled -= BindCanceled;
-        }
-    }
-
-    private void BindPerformed(InputAction.CallbackContext callbackContext) => performed(gunFrame.GetState());
-    private void BindStarted(InputAction.CallbackContext callbackContext) => started(gunFrame.GetState());
-    private void BindCanceled(InputAction.CallbackContext callbackContext) => canceled(gunFrame.GetState());
+    protected override void BindPerformed(InputAction.CallbackContext callbackContext) => performed(gunFrame.GetState());
+    protected override void BindStarted(InputAction.CallbackContext callbackContext) => started(gunFrame.GetState());
+    protected override void BindCanceled(InputAction.CallbackContext callbackContext) => canceled(gunFrame.GetState());
     
     [Serializable]
     public enum TriggerEventType
