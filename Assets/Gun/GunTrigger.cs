@@ -45,7 +45,7 @@ public class GunTrigger : InteractibleGunPart
             if (!gunPartActed || !gunPartReacting) return;
             
             if (gunPartActed.doubleAction)
-                gunPartActed.started += gunPartReacting.CallPulled;
+                gunPartActed.started += gunPartReacting.CallPulledIfNotPulled;
             
             switch (triggerEventType)
             {

@@ -11,6 +11,13 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     public OwnerAction ownerWillChange = actor => {};
     public OwnerAction ownerChanged = actor => {};
     
+    public GunManagementType gunManagementType;
+    
+    public List<GunTrigger.TriggerHammerLink> triggerHammerLinks = new ();
+    public List<GunHammer.HammerChamberLink> hammerChamberLinks = new();
+    public List<GunChamber.ChamberBarrelLink> chamberBarrelLinks = new ();
+    public List<GunBarrel.BarrelBulletFactoryLink> barrelBulletFactoryLinks = new ();
+    
     public List<GunTrigger> triggers = new ();
     public List<GunHammer> hammers = new();
     public List<PropellantTank> propellantTanks = new ();
@@ -18,13 +25,6 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     public List<GunBarrel> barrels = new ();
     public List<BulletFactory> bulletFactories = new ();
     public List<GunPart> gunParts = new ();
-    
-    public List<GunTrigger.TriggerHammerLink> triggerHammerLinks = new ();
-    public List<GunHammer.HammerChamberLink> hammerChamberLinks = new();
-    public List<GunChamber.ChamberBarrelLink> chamberBarrelLinks = new ();
-    public List<GunBarrel.BarrelBulletFactoryLink> barrelBulletFactoryLinks = new ();
-
-    public GunManagementType gunManagementType;
     
     private GunState gunState = new GunState();
 
@@ -53,7 +53,7 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
         AutoLinkGunParts(barrelBulletFactoryLinks, barrels, bulletFactories);
     }
 
-    public void AutoLinkGunParts<TGunLink, TGunPartActed, TGunPartReacting>(in List<TGunLink> gunLinks, in List<TGunPartActed> gunPartActing, in List<TGunPartReacting> gunPartReacted)
+    public static void AutoLinkGunParts<TGunLink, TGunPartActed, TGunPartReacting>(in List<TGunLink> gunLinks, in List<TGunPartActed> gunPartActing, in List<TGunPartReacting> gunPartReacted)
         where TGunLink : GunLink<TGunPartActed, TGunPartReacting>, new()
         where TGunPartActed : GunPart
         where TGunPartReacting : GunPart
@@ -70,10 +70,32 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
         {
             gunLinks.Add(new TGunLink
             {
+                active = true,
                 gunPartActed = gunPartActing[i],
                 gunPartReacting = gunPartReacted[i]
             });
             gunLinks[i].Link();
+        }
+    }
+    
+    private void ManualAfterSerialize()
+    {
+        ManualLinkGunParts<GunTrigger.TriggerHammerLink, GunTrigger, GunHammer>(triggerHammerLinks);
+        ManualLinkGunParts<GunHammer.HammerChamberLink, GunHammer, GunChamber>(hammerChamberLinks);
+        ManualLinkGunParts<GunChamber.ChamberBarrelLink, GunChamber, GunBarrel>(chamberBarrelLinks);
+        ManualLinkGunParts<GunBarrel.BarrelBulletFactoryLink, GunBarrel, BulletFactory>(barrelBulletFactoryLinks);
+    }
+
+    public static void ManualLinkGunParts<TGunLink, TGunPartActed, TGunPartReacting>(in List<TGunLink> gunLinks)
+        where TGunLink : GunLink<TGunPartActed, TGunPartReacting>, new()
+        where TGunPartActed : GunPart
+        where TGunPartReacting : GunPart
+    {
+        foreach (var link in gunLinks)
+        {
+            if (!link.active) continue;
+            link.UnLink();
+            link.Link();
         }
     }
 
@@ -81,6 +103,8 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     {
         if (gunManagementType == GunManagementType.Auto)
             AutoAfterSerialize();
+        if (gunManagementType == GunManagementType.Manual)
+            ManualAfterSerialize();
     }
     
     public struct GunState
@@ -101,7 +125,8 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
 
     public enum GunManagementType
     {
-        Auto
+        Auto,
+        Manual
     }
 
     public delegate void OwnerAction(Actor actor);
@@ -110,6 +135,7 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     where TGunPartActed : GunPart
     where TGunPartReacting : GunPart
     {
+        public bool active;
         public TGunPartActed gunPartActed;
         public TGunPartReacting gunPartReacting;
 

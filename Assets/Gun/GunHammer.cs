@@ -25,8 +25,9 @@ public class GunHammer : InteractibleGunPart
         isPulled = true;
     }
 
-    public void CallPulled(GunFrame.GunState gunState)
+    public void CallPulledIfNotPulled(GunFrame.GunState gunState)
     {
+        if (isPulled) return;
         pulled(gunState);
     }
 

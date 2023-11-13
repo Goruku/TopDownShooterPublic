@@ -17,6 +17,12 @@ public class GunPart : MonoBehaviour
     private void Reset()
     {
         AttachToGunFrame();
+        if (!gunFrame)
+        {
+            Debug.LogError("A GunPart requires a parent GunFrame or needs to have a GunFrame itself");
+            DestroyImmediate(this);
+            return;
+        }
     }
 
     protected void OnEnable()

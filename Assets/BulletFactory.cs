@@ -8,7 +8,13 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(AudioSource))]
 public class BulletFactory : GunPart
 {
+    [HideInInspector]
     public AudioSource audioSource;
+
+    private void Reset()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void CreateBullets(GunFrame.Shot shot, Transform fireLocation)
     {
