@@ -1,5 +1,53 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2792622173729637499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8695093132966713954}
+  - component: {fileID: 5000359705796751487}
+  m_Layer: 0
+  m_Name: Hammer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8695093132966713954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792622173729637499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8055737655300606783}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5000359705796751487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792622173729637499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255bb6d8eff2f9a4d9b895ae09bb3508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 5649832260021112759}
+  shouldUpdateBindings: 1
+  playerActionOverride: 
 --- !u!1 &4856367537698883887
 GameObject:
   m_ObjectHideFlags: 0
@@ -48,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
-  gunFrame: {fileID: 3868470761668333449}
+  gunFrame: {fileID: 0}
   firingLocation: {fileID: 2240840841545121934}
 --- !u!114 &3145445574262745501
 MonoBehaviour:
@@ -62,6 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad38e9d7cf934141a9a3bc9f4ac6d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 5649832260021112759}
   audioSource: {fileID: 1711566446096656165}
 --- !u!82 &1711566446096656165
 AudioSource:
@@ -220,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
-  gunFrame: {fileID: 3868470761668333449}
+  gunFrame: {fileID: 5649832260021112759}
   targetingRange: {fileID: 11400000, guid: 0c489c7721ba9784ea92f2bc88b1d544, type: 2}
 --- !u!1 &8873974942832601122
 GameObject:
@@ -267,7 +317,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
-  gunFrame: {fileID: 3868470761668333449}
+  gunFrame: {fileID: 5649832260021112759}
+  shouldUpdateBindings: 1
+  playerActionOverride: 
+  doubleAction: 0
   triggerEventType: 1
 --- !u!1 &8883052042415664880
 GameObject:
@@ -279,7 +332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8055737655300606783}
   - component: {fileID: 3450416295587980724}
-  - component: {fileID: 3868470761668333449}
+  - component: {fileID: 5649832260021112759}
   - component: {fileID: 2948376685367520812}
   - component: {fileID: 8381965109715552442}
   m_Layer: 0
@@ -305,6 +358,7 @@ Transform:
   - {fileID: 1779279312602121728}
   - {fileID: 2240840841545121934}
   - {fileID: 9009959870487361219}
+  - {fileID: 8695093132966713954}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3450416295587980724
@@ -359,7 +413,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3868470761668333449
+--- !u!114 &5649832260021112759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -374,6 +428,8 @@ MonoBehaviour:
   owner: {fileID: 0}
   triggers:
   - {fileID: 1782250753494069756}
+  hammers:
+  - {fileID: 5000359705796751487}
   propellantTanks: []
   chambers:
   - {fileID: 2948376685367520812}
@@ -381,18 +437,20 @@ MonoBehaviour:
   - {fileID: 7759062113600689010}
   bulletFactories:
   - {fileID: 3145445574262745501}
-  gunParts:
-  - {fileID: 567557940139792008}
-  triggerChamberLinks:
-  - gunTrigger: {fileID: 1782250753494069756}
-    gunChamber: {fileID: 2948376685367520812}
-    triggerEventType: 1
+  gunParts: []
+  triggerHammerLinks:
+  - gunPartActed: {fileID: 1782250753494069756}
+    gunPartReacting: {fileID: 5000359705796751487}
+    triggerEventType: 0
+  hammerChamberLinks:
+  - gunPartActed: {fileID: 5000359705796751487}
+    gunPartReacting: {fileID: 2948376685367520812}
   chamberBarrelLinks:
-  - gunChamber: {fileID: 2948376685367520812}
-    gunBarrel: {fileID: 7759062113600689010}
+  - gunPartActed: {fileID: 2948376685367520812}
+    gunPartReacting: {fileID: 7759062113600689010}
   barrelBulletFactoryLinks:
-  - gunBarrel: {fileID: 7759062113600689010}
-    bulletFactory: {fileID: 3145445574262745501}
+  - gunPartActed: {fileID: 7759062113600689010}
+    gunPartReacting: {fileID: 3145445574262745501}
   gunManagementType: 0
 --- !u!114 &2948376685367520812
 MonoBehaviour:
@@ -407,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
-  gunFrame: {fileID: 3868470761668333449}
+  gunFrame: {fileID: 0}
   externalPropellant: {fileID: 0}
   caliber: {fileID: 11400000, guid: 7a0d21955cdb4244cb1b4528d3c07aa7, type: 2}
   round: {fileID: 11400000, guid: ce816ffb845ac0c438da81228d385970, type: 2}

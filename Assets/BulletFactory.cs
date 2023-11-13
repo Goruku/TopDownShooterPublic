@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(AudioSource))]
-public class BulletFactory : MonoBehaviour
+public class BulletFactory : GunPart
 {
     public AudioSource audioSource;
 
@@ -33,11 +33,5 @@ public class BulletFactory : MonoBehaviour
         
         if (audioSource && shot.shotSound)
             audioSource.PlayOneShot(shot.shotSound);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

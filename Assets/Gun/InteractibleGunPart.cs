@@ -8,6 +8,8 @@ using UnityEngine.Serialization;
 
 public abstract class InteractibleGunPart : GunPart, ISerializationCallbackReceiver
 {
+    public bool shouldUpdateBindings = false;
+    
     private string PlayerActionOverrideChecker
     {
         get => string.IsNullOrEmpty(playerActionOverride) ? DefaultPlayerAction : playerActionOverride;
@@ -36,14 +38,27 @@ public abstract class InteractibleGunPart : GunPart, ISerializationCallbackRecei
         gunFrame.ownerChanged -= AttemptBindAction;
     }
 
+    private void Update()
+    {
+        if (!shouldUpdateBindings) return;
+        AttemptRebind(gunFrame.owner);
+        shouldUpdateBindings = false;
+    }
+
     public void OnBeforeSerialize()
     {
-        AttemptUnbind(gunFrame.owner);
+        shouldUpdateBindings = true;
     }
 
     public void OnAfterDeserialize()
     {
-        AttemptBindAction(gunFrame.owner);
+        shouldUpdateBindings = true;
+    }
+
+    private void AttemptRebind(Actor actor)
+    {
+        AttemptUnbind(actor);
+        AttemptBindAction(actor);
     }
 
     private void AttemptBindAction(Actor actor)

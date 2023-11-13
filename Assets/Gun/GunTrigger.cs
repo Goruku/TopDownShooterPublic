@@ -9,6 +9,8 @@ using UnityEngine.Serialization;
 public class GunTrigger : InteractibleGunPart
 {
 
+    public bool doubleAction = true;
+    
     protected override string DefaultPlayerAction
     {
         get => "Fire";
@@ -34,42 +36,47 @@ public class GunTrigger : InteractibleGunPart
     }
 
     [Serializable]
-    public struct TriggerChamberLink
+    public class TriggerHammerLink : GunFrame.GunLink<GunTrigger, GunHammer>
     {
-        public GunTrigger gunTrigger;
-        public GunChamber gunChamber;
         public TriggerEventType triggerEventType;
         
-        public void Link()
+        public override void Link()
         {
-            if (!gunTrigger || !gunChamber) return;
+            if (!gunPartActed || !gunPartReacting) return;
+            
+            if (gunPartActed.doubleAction)
+                gunPartActed.started += gunPartReacting.CallPulled;
+            
             switch (triggerEventType)
             {
                 case TriggerEventType.Ended:
-                    gunTrigger.canceled += gunChamber.ConsumeNextShot;
+                    gunPartActed.canceled += gunPartReacting.AttemptStrike;
                     break;
                 case TriggerEventType.Performed:
-                    gunTrigger.performed += gunChamber.ConsumeNextShot;
+                    gunPartActed.performed += gunPartReacting.AttemptStrike;
                     break;
                 case TriggerEventType.Started:
-                    gunTrigger.started += gunChamber.ConsumeNextShot;
+                    gunPartActed.started += gunPartReacting.AttemptStrike;
                     break;
             }
         }
 
-        public void UnLink()
+        public override void UnLink()
         {
-            if (!gunTrigger || !gunChamber) return;
+            if (!gunPartActed || !gunPartReacting) return;
+            if (gunPartActed.doubleAction)
+                gunPartActed.started -= gunPartReacting.pulled.Invoke;
+            
             switch (triggerEventType)
             {
                 case TriggerEventType.Ended:
-                    gunTrigger.canceled -= gunChamber.ConsumeNextShot;
+                    gunPartActed.canceled -= gunPartReacting.AttemptStrike;
                     break;
                 case TriggerEventType.Performed:
-                    gunTrigger.performed -= gunChamber.ConsumeNextShot;
+                    gunPartActed.performed -= gunPartReacting.AttemptStrike;
                     break;
                 case TriggerEventType.Started:
-                    gunTrigger.started -= gunChamber.ConsumeNextShot;
+                    gunPartActed.started -= gunPartReacting.AttemptStrike;
                     break;
             }
         }

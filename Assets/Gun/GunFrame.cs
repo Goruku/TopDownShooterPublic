@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GunFrame : Entity, ISerializationCallbackReceiver
 {
@@ -11,13 +12,15 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     public OwnerAction ownerChanged = actor => {};
     
     public List<GunTrigger> triggers = new ();
+    public List<GunHammer> hammers = new();
     public List<PropellantTank> propellantTanks = new ();
     public List<GunChamber> chambers = new ();
     public List<GunBarrel> barrels = new ();
     public List<BulletFactory> bulletFactories = new ();
     public List<GunPart> gunParts = new ();
-
-    public List<GunTrigger.TriggerChamberLink> triggerChamberLinks = new ();
+    
+    public List<GunTrigger.TriggerHammerLink> triggerHammerLinks = new ();
+    public List<GunHammer.HammerChamberLink> hammerChamberLinks = new();
     public List<GunChamber.ChamberBarrelLink> chamberBarrelLinks = new ();
     public List<GunBarrel.BarrelBulletFactoryLink> barrelBulletFactoryLinks = new ();
 
@@ -44,60 +47,33 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
 
     private void AutoAfterSerialize()
     {
-        foreach (var link in triggerChamberLinks)
-        {
-            link.UnLink();
-        }
-        triggerChamberLinks.Clear();
-        var triggerChamberCount = triggers.Count <= chambers.Count
-            ? triggers.Count
-            : chambers.Count;
-        for (var i = 0; i < triggerChamberCount; i++)
-        {
-            if (!triggers[i]) continue;
-            triggerChamberLinks.Add(new GunTrigger.TriggerChamberLink
-            {
-                gunChamber = chambers[i],
-                gunTrigger = triggers[i],
-                triggerEventType = triggers[i].triggerEventType
-            });
-            triggerChamberLinks[i].Link();
-        }
+        AutoLinkGunParts(triggerHammerLinks, triggers, hammers);
+        AutoLinkGunParts(hammerChamberLinks, hammers, chambers);
+        AutoLinkGunParts(chamberBarrelLinks, chambers, barrels);
+        AutoLinkGunParts(barrelBulletFactoryLinks, barrels, bulletFactories);
+    }
 
-        foreach (var link in chamberBarrelLinks)
+    public void AutoLinkGunParts<TGunLink, TGunPartActed, TGunPartReacting>(in List<TGunLink> gunLinks, in List<TGunPartActed> gunPartActing, in List<TGunPartReacting> gunPartReacted)
+        where TGunLink : GunLink<TGunPartActed, TGunPartReacting>, new()
+        where TGunPartActed : GunPart
+        where TGunPartReacting : GunPart
+    {
+        foreach (var link in gunLinks)
         {
             link.UnLink();
         }
-        chamberBarrelLinks.Clear();
-        var chamberBarrelCount = chambers.Count <= barrels.Count
-            ? chambers.Count
-            : barrels.Count;
-        for (var i = 0; i < chamberBarrelCount; i++)
+        gunLinks.Clear();
+        var lowestCount = gunPartActing.Count <= gunPartReacted.Count
+            ? gunPartActing.Count
+            : gunPartReacted.Count;
+        for (var i = 0; i < lowestCount; i++)
         {
-            chamberBarrelLinks.Add(new GunChamber.ChamberBarrelLink
+            gunLinks.Add(new TGunLink
             {
-                gunChamber = chambers[i],
-                gunBarrel = barrels[i],
+                gunPartActed = gunPartActing[i],
+                gunPartReacting = gunPartReacted[i]
             });
-            chamberBarrelLinks[i].Link();
-        }
-        
-        foreach (var link in barrelBulletFactoryLinks)
-        {
-            link.UnLink();
-        }
-        barrelBulletFactoryLinks.Clear();
-        var barrelFactoryCount = barrels.Count <= bulletFactories.Count
-            ? barrels.Count
-            : bulletFactories.Count;
-        for (var i = 0; i < barrelFactoryCount; i++)
-        {
-            barrelBulletFactoryLinks.Add(new GunBarrel.BarrelBulletFactoryLink
-            {
-                gunBarrel = barrels[i],
-                bulletFactory = bulletFactories[i]
-            });
-            barrelBulletFactoryLinks[i].Link();
+            gunLinks[i].Link();
         }
     }
 
@@ -129,4 +105,15 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     }
 
     public delegate void OwnerAction(Actor actor);
+
+    public abstract class GunLink<TGunPartActed, TGunPartReacting>
+    where TGunPartActed : GunPart
+    where TGunPartReacting : GunPart
+    {
+        public TGunPartActed gunPartActed;
+        public TGunPartReacting gunPartReacting;
+
+        public abstract void Link();
+        public abstract void UnLink();
+    }
 }

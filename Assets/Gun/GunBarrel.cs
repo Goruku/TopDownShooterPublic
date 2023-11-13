@@ -36,21 +36,18 @@ public class GunBarrel : GunPart
     }
 
     [Serializable]
-    public struct BarrelBulletFactoryLink
+    public class BarrelBulletFactoryLink : GunFrame.GunLink<GunBarrel, BulletFactory>
     {
-        public GunBarrel gunBarrel;
-        public BulletFactory bulletFactory;
-
-        public void Link()
+        public override void Link()
         {
-            if (!gunBarrel || !bulletFactory) return;
-            gunBarrel.emptied += bulletFactory.CreateBullets;
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.emptied += gunPartReacting.CreateBullets;
         }
 
-        public void UnLink()
+        public override void UnLink()
         {
-            if (!gunBarrel || !bulletFactory) return;
-            gunBarrel.emptied -= bulletFactory.CreateBullets;
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.emptied -= gunPartReacting.CreateBullets;
         }
     }
 }

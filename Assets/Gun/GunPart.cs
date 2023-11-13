@@ -14,6 +14,11 @@ public class GunPart : MonoBehaviour
         Entity.BindToClosest<GunFrame>(transform, out gunFrame);
     }
 
+    private void Reset()
+    {
+        AttachToGunFrame();
+    }
+
     protected void OnEnable()
     {
         AttachToGunFrame();

@@ -89,21 +89,18 @@ public class GunChamber : GunPart
     }
 
     [Serializable]
-    public struct ChamberBarrelLink
+    public class ChamberBarrelLink : GunFrame.GunLink<GunChamber, GunBarrel>
     {
-        public GunChamber gunChamber;
-        public GunBarrel gunBarrel;
-
-        public void Link()
+        public override void Link()
         {
-            if (!gunChamber || !gunBarrel) return;
-            gunChamber.fire += gunBarrel.FeedRound;
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.fire += gunPartReacting.FeedRound;
         }
 
-        public void UnLink()
+        public override void UnLink()
         {
-            if (!gunChamber || !gunBarrel) return;
-            gunChamber.fire -= gunBarrel.FeedRound;
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.fire -= gunPartReacting.FeedRound;
         }
     }
 }
