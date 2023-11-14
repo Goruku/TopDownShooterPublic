@@ -67,6 +67,7 @@ Transform:
   - {fileID: 234152177193595672}
   - {fileID: 6102878102529325013}
   - {fileID: 459367705488419127}
+  - {fileID: 8209805530998454944}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &237852647427490248
@@ -134,8 +135,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
+  gunManagementType: 0
+  triggerHammerLinks:
+  - active: 1
+    gunPartActed: {fileID: 5970314467070176863}
+    gunPartReacting: {fileID: 5347526558128667472}
+    triggerEventType: 0
+  hammerChamberLinks:
+  - active: 1
+    gunPartActed: {fileID: 5347526558128667472}
+    gunPartReacting: {fileID: 2290686322437082006}
+  chamberBarrelLinks:
+  - active: 1
+    gunPartActed: {fileID: 2290686322437082006}
+    gunPartReacting: {fileID: 2057199227659246842}
+  barrelBulletFactoryLinks:
+  - active: 1
+    gunPartActed: {fileID: 2057199227659246842}
+    gunPartReacting: {fileID: 2084558690934186423}
   triggers:
   - {fileID: 5970314467070176863}
+  hammers:
+  - {fileID: 5347526558128667472}
   propellantTanks: []
   chambers:
   - {fileID: 2290686322437082006}
@@ -144,17 +165,6 @@ MonoBehaviour:
   bulletFactories:
   - {fileID: 2084558690934186423}
   gunParts: []
-  triggerChamberLinks:
-  - gunTrigger: {fileID: 5970314467070176863}
-    gunChamber: {fileID: 2290686322437082006}
-    triggerEventType: 1
-  chamberBarrelLinks:
-  - gunChamber: {fileID: 2290686322437082006}
-    gunBarrel: {fileID: 2057199227659246842}
-  barrelBulletFactoryLinks:
-  - gunBarrel: {fileID: 2057199227659246842}
-    bulletFactory: {fileID: 2084558690934186423}
-  gunManagementType: 0
 --- !u!58 &8250140686050716376
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -203,6 +213,7 @@ GameObject:
   - component: {fileID: 2084558690934186423}
   - component: {fileID: 2057199227659246842}
   - component: {fileID: 1418879248016366499}
+  - component: {fileID: 5347526558128667472}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -334,6 +345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ad38e9d7cf934141a9a3bc9f4ac6d5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 0}
   audioSource: {fileID: 623178928915428803}
 --- !u!114 &2057199227659246842
 MonoBehaviour:
@@ -366,6 +379,22 @@ MonoBehaviour:
   physicsRecoilPattern: {fileID: 11400000, guid: 1ce580a4f82e5c04a9c5bde65c1344e4, type: 2}
   gunBarrel: {fileID: 0}
   physicsObject: {fileID: 0}
+--- !u!114 &5347526558128667472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4907408896443598137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255bb6d8eff2f9a4d9b895ae09bb3508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 8792730700165747778}
+  shouldUpdateBindings: 1
+  playerActionOverride: 
 --- !u!1 &5815460306459100364
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +441,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 8792730700165747778}
+  shouldUpdateBindings: 1
+  playerActionOverride: 
+  doubleAction: 1
+  safety: 0
   triggerEventType: 1
 --- !u!1 &6798296365231213928
 GameObject:
@@ -469,6 +502,68 @@ MonoBehaviour:
     gunRandomness: 0.2
     gunIncidence: 0.8
   gunParts: []
+--- !u!1 &7395539360912291533
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8209805530998454944}
+  - component: {fileID: 14504116851565563}
+  m_Layer: 0
+  m_Name: Feeder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8209805530998454944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395539360912291533}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.5404475, y: 0.02601615, z: 0.08007616}
+  m_LocalScale: {x: 4.166667, y: 0.5235602, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4637774157661582015}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &14504116851565563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395539360912291533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d17c87236c8f245b9318f56ce90f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 8792730700165747778}
+  chamber: {fileID: 2290686322437082006}
+  ammunition:
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  hammerFeederLinks:
+  - active: 1
+    gunPartActed: {fileID: 5347526558128667472}
+    gunPartReacting: {fileID: 14504116851565563}
 --- !u!1 &9146303845759243965
 GameObject:
   m_ObjectHideFlags: 0

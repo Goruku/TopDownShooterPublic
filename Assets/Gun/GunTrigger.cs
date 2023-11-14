@@ -19,14 +19,29 @@ public class GunTrigger : InteractibleGunPart
     public TriggerEvent performed = state => {};
     public TriggerEvent started = state => {};
     public TriggerEvent canceled = state => {};
+    public bool safety = false;
     public TriggerEventType triggerEventType;
     
     public delegate void TriggerEvent(GunFrame.GunState gunState);
 
-    protected override void BindPerformed(InputAction.CallbackContext callbackContext) => performed(gunFrame.GetState());
-    protected override void BindStarted(InputAction.CallbackContext callbackContext) => started(gunFrame.GetState());
-    protected override void BindCanceled(InputAction.CallbackContext callbackContext) => canceled(gunFrame.GetState());
-    
+    protected override void BindPerformed(InputAction.CallbackContext callbackContext)
+    {
+        if (safety) return;
+        performed(gunFrame.GetState());
+    }
+
+    protected override void BindStarted(InputAction.CallbackContext callbackContext)
+    {
+        if (safety) return;
+        started(gunFrame.GetState());
+    }
+
+    protected override void BindCanceled(InputAction.CallbackContext callbackContext)
+    {
+        if (safety) return;
+        canceled(gunFrame.GetState());
+    }
+
     [Serializable]
     public enum TriggerEventType
     {
