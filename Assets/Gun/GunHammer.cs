@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GunHammer : InteractibleGunPart
 {
-    public HammerEvent struck = state => {};
+    public HammerEvent struck = state => {Debug.Log("Hammer struck");};
     public HammerEvent pulled = state => {Debug.Log("Hammer Pulled");};
     public HammerEvent released = state => {Debug.Log("Hammer Released");};
     public HammerEvent performed = state => {};
@@ -27,6 +28,13 @@ public class GunHammer : InteractibleGunPart
 
     public void CallPulledIfNotPulled(GunFrame.GunState gunState)
     {
+        if (isPulled) return;
+        pulled(gunState);
+    }
+
+    public void CallPulledOnChamberEvent(GunFrame.Shot shot, Ammunition ammunition, GunFrame.GunState gunState)
+    {
+        Debug.Log("CalledPulledOnChamberEvent");
         if (isPulled) return;
         pulled(gunState);
     }
@@ -72,8 +80,8 @@ public class GunHammer : InteractibleGunPart
     public void AttemptStrike(GunFrame.GunState gunState)
     {
         if (!isPulled) return;
-        struck(gunState);
         isPulled = false;
+        struck(gunState);
     }
 
     public delegate void HammerEvent(GunFrame.GunState gunState);
@@ -91,6 +99,22 @@ public class GunHammer : InteractibleGunPart
         {
             if (!gunPartActed || !gunPartReacting) return;
             gunPartActed.struck -= gunPartReacting.ConsumeNextShot;
+        }
+    }
+
+    [Serializable]
+    public class HammerFeederLink : GunFrame.GunLink<GunHammer, GunFeeder>
+    {
+        public override void Link()
+        {
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.pulled += gunPartReacting.FeedRound;
+        }
+
+        public override void UnLink()
+        {
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.pulled -= gunPartReacting.FeedRound;
         }
     }
 }

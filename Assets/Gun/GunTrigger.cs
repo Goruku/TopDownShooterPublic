@@ -64,21 +64,10 @@ public class GunTrigger : InteractibleGunPart
         public override void UnLink()
         {
             if (!gunPartActed || !gunPartReacting) return;
-            if (gunPartActed.doubleAction)
-                gunPartActed.started -= gunPartReacting.pulled.Invoke;
-            
-            switch (triggerEventType)
-            {
-                case TriggerEventType.Ended:
-                    gunPartActed.canceled -= gunPartReacting.AttemptStrike;
-                    break;
-                case TriggerEventType.Performed:
-                    gunPartActed.performed -= gunPartReacting.AttemptStrike;
-                    break;
-                case TriggerEventType.Started:
-                    gunPartActed.started -= gunPartReacting.AttemptStrike;
-                    break;
-            }
+            gunPartActed.started -= gunPartReacting.CallPulledIfNotPulled;
+            gunPartActed.canceled -= gunPartReacting.AttemptStrike;
+            gunPartActed.performed -= gunPartReacting.AttemptStrike;
+            gunPartActed.started -= gunPartReacting.AttemptStrike;
         }
     }
 }

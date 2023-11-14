@@ -15,7 +15,7 @@ public class GunChamber : GunPart
     public AudioClip jam;
     public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f};
 
-    public ChamberEvent fed = (shot, ammunition, state) => {};
+    public ChamberEvent fed = (shot, ammunition, state) => {Debug.Log("Fed");};
     public ChamberEvent fire = (shot, ammunition, state) => {Debug.Log("Fired");};
     public ChamberEvent wasEmpty = (shot, ammunition, state) => {Debug.Log("Empty");};
     public ChamberEvent jammed = (shot, ammunition, state) => {};
@@ -74,8 +74,9 @@ public class GunChamber : GunPart
             randomness = (gunRandomness.gunIncidence)*gunRandomness.gunRandomness + (1- gunRandomness.gunIncidence)*round.bulletRandomness,
             shotSound = fireSound
         };
-        fire(shot, round, gunFrame.GetState());
+        var roundToSend = round;
         round = null;
+        fire(shot, roundToSend, gunFrame.GetState());
     }
 
     public delegate void ChamberEvent(GunFrame.Shot shot, Ammunition ammunition, GunFrame.GunState gunState);
@@ -102,5 +103,28 @@ public class GunChamber : GunPart
             if (!gunPartActed || !gunPartReacting) return;
             gunPartActed.fire -= gunPartReacting.FeedRound;
         }
+    }
+    
+    [Serializable]
+    public class ChamberHammerLink : GunFrame.GunLink<GunChamber, GunHammer>
+    {
+        public override void Link()
+        {
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.fire += gunPartReacting.CallPulledOnChamberEvent;
+        }
+
+        public override void UnLink()
+        {
+            if (!gunPartActed || !gunPartReacting) return;
+            gunPartActed.fire -= gunPartReacting.CallPulledOnChamberEvent;
+        }
+    }
+
+    public void Feed(Ammunition ammuntion)
+    {
+        if (round) return;
+        round = ammuntion;
+        fed(new GunFrame.Shot{empty = true}, round, gunFrame.GetState());
     }
 }
