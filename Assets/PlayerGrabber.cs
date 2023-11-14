@@ -50,11 +50,11 @@ public class PlayerGrabber : MonoBehaviour
         foreach (var collider in colliders)
         {
             if (!collider) continue;
-            var shootingManager = collider.GetComponent<ShootingManager>();
-            if (shootingManager && !shootingManager.owner)
+            var gunFrame = collider.GetComponent<GunFrame>();
+            if (gunFrame && !gunFrame.owner)
             {
                 Debug.Log("You tried to pick up a gun!");
-                gunMounter.SwapGun(shootingManager);
+                gunMounter.SwapGun(gunFrame);
             }
         }
     }

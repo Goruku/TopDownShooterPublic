@@ -3,41 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(ShootingManager))]
-public class BulletFactory : MonoBehaviour
+public class BulletFactory : GunPart
 {
-    private ShootingManager _shootingManager;
-    public GunFrame gunFrame;
-    
+    [HideInInspector]
     public AudioSource audioSource;
-    
-    private void OnEnable()
+
+    private void Reset()
     {
-        _shootingManager = GetComponent<ShootingManager>();
-        _shootingManager.shotTrigger += CreateBullets;
+        audioSource = GetComponent<AudioSource>();
     }
 
-    private void OnDisable()
+    public void CreateBullets(GunFrame.Shot shot, Transform fireLocation)
     {
-        _shootingManager.shotTrigger -= CreateBullets;
-    }
-
-    void CreateBullets(Transform fireLocation)
-    {
-        var shot = gunFrame.ConsumeNextShot();
-
         if (shot.misfire && audioSource)
         {
-            audioSource.PlayOneShot(gunFrame.jam);
+            audioSource.PlayOneShot(shot.shotSound);
             //misfire firing effect?
             return;
         }
         
         if (shot.empty && audioSource)
         {
-            audioSource.PlayOneShot(gunFrame.emptySound);
+            audioSource.PlayOneShot(shot.shotSound);
             return;
         }
 
@@ -46,16 +36,7 @@ public class BulletFactory : MonoBehaviour
             var newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
             newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*shot.velocity;
         }
-
-        _shootingManager.firingEffect(fireLocation, shot);
-        
-        if (audioSource && gunFrame.fireSound)
-            audioSource.PlayOneShot(gunFrame.fireSound);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (audioSource && shot.shotSound)
+            audioSource.PlayOneShot(shot.shotSound);
     }
 }

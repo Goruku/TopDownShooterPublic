@@ -18,4 +18,9 @@ public class Agent : Actor
             return _playerInput;
         }
     }
+
+    public PlayerInput playerInputUnsafe
+    {
+        get => _playerInput;
+    }
 }

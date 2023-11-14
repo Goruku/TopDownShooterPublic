@@ -9,31 +9,31 @@ using UnityEngine.Serialization;
 [ExecuteAlways]
 public class GunMounter : MonoBehaviour
 {
-    public ShootingManager shootingManager;
+    public GunFrame gunFrame;
 
-    public void SwapGun(ShootingManager otherShooterManager)
+    public void SwapGun(GunFrame otherGunFrame)
     {
-        var formerParent = otherShooterManager.transform.parent;
+        var formerParent = otherGunFrame.transform.parent;
         if (!formerParent)
         {
-            otherShooterManager.transform.parent = shootingManager.transform.parent;
+            otherGunFrame.transform.parent = gunFrame.transform.parent;
         }
         else
         {
-            otherShooterManager.transform.SetParent(shootingManager.transform.parent, true);
+            otherGunFrame.transform.SetParent(gunFrame.transform.parent, true);
         }
-        shootingManager.transform.SetParent(formerParent, true);
+        gunFrame.transform.SetParent(formerParent, true);
         
-        shootingManager = otherShooterManager;
-        shootingManager.transform.localPosition = new Vector3();
-        shootingManager.transform.rotation = new Quaternion();
+        gunFrame = otherGunFrame;
+        gunFrame.transform.localPosition = new Vector3();
+        gunFrame.transform.rotation = new Quaternion();
     }
 
     private void OnEnable()
     {
-        var shootingManagers = transform.GetComponentsInChildren<ShootingManager>();
-        if (shootingManagers.Length <= 0) return;
-        shootingManager = shootingManagers[0];
+        var gunFrames = transform.GetComponentsInChildren<GunFrame>();
+        if (gunFrames.Length <= 0) return;
+        gunFrame = gunFrames[0];
     }
 
     private void OnDisable()

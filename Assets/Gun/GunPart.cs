@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GunPart : MonoBehaviour
 {
@@ -12,7 +13,18 @@ public class GunPart : MonoBehaviour
     {
         Entity.BindToClosest<GunFrame>(transform, out gunFrame);
     }
-
+    
+    private void Reset()
+    {
+        AttachToGunFrame();
+        if (!gunFrame)
+        {
+            Debug.LogError("A GunPart requires a parent GunFrame or needs to have a GunFrame itself");
+            DestroyImmediate(this);
+            return;
+        }
+    }
+    
     protected void OnEnable()
     {
         AttachToGunFrame();
