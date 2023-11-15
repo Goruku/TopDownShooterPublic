@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6553150275212762895}
   - component: {fileID: 6219179627923515126}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TrueTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8383806791523253004}
   - component: {fileID: 4433271076661176084}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DistanceTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 4295921398593218880}
   - component: {fileID: 2168882707817028920}
   - component: {fileID: 6159687186456956489}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   - component: {fileID: 4074514601937384185}
   - component: {fileID: 1559426635241140986}
   - component: {fileID: 1421458082428203519}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Targetting Gizmos
   m_TagString: Untagged
   m_Icon: {fileID: 0}

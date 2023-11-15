@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 8920144298745467316}
   - component: {fileID: -5719019089851476421}
   - component: {fileID: 7780970312772909919}
-  m_Layer: 0
+  - component: {fileID: 4739357955469940373}
+  m_Layer: 3
   m_Name: Pellet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -259,3 +260,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -5719019089851476421}
+--- !u!114 &4739357955469940373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245111514932939356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84024b667e0fffb49b0737d5fa57ddf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifetime: 5
+  lifeEnd: 0
