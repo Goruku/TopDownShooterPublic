@@ -11,20 +11,14 @@ public class GunMounter : MonoBehaviour
 {
     public GunFrame gunFrame;
 
-    public void SwapGun(GunFrame otherGunFrame)
+    public void SwapGun(Transform target, GunFrame otherGunFrame)
     {
         var formerParent = otherGunFrame.transform.parent;
-        if (!formerParent)
-        {
-            otherGunFrame.transform.parent = gunFrame.transform.parent;
-        }
-        else
-        {
-            otherGunFrame.transform.SetParent(gunFrame.transform.parent, true);
-        }
-        gunFrame.transform.SetParent(formerParent, true);
-        
+        if (gunFrame)
+            gunFrame.transform.SetParent(formerParent, true);
         gunFrame = otherGunFrame;
+        otherGunFrame.transform.SetParent(transform);
+
         gunFrame.transform.localPosition = new Vector3();
         gunFrame.transform.rotation = new Quaternion();
     }

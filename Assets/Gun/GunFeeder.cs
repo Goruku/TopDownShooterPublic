@@ -1,13 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-public class GunFeeder : GunPart, ISerializationCallbackReceiver
+public class GunFeeder : InteractibleGunPart, ISerializationCallbackReceiver
 {
 
     public GunChamber chamber;
     public List<Ammunition> ammunition = new ();
+    public List<Ammunition> defaultMagazine = new();
+    
+    protected override string DefaultPlayerAction
+    {
+        get => "Reload";
+    }
 
     public List<GunHammer.HammerFeederLink> hammerFeederLinks;
 
@@ -19,6 +27,24 @@ public class GunFeeder : GunPart, ISerializationCallbackReceiver
     public void OnAfterDeserialize()
     {
         GunFrame.ManualLinkGunParts<GunHammer.HammerFeederLink, GunHammer, GunFeeder>(hammerFeederLinks);
+    }
+
+    protected override void BindPerformed(InputAction.CallbackContext callbackContext)
+    {
+        ammunition.Clear();
+        foreach (var ammo in defaultMagazine)
+        {
+            ammunition.Add(Instantiate(ammo));
+        }
+    }
+
+    protected override void BindStarted(InputAction.CallbackContext callbackContext)
+    {
+    }
+
+    protected override void BindCanceled(InputAction.CallbackContext callbackContext)
+    {
+        
     }
 
     public void FeedRound(GunFrame.GunState gunState)
@@ -37,7 +63,6 @@ public class GunFeeder : GunPart, ISerializationCallbackReceiver
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

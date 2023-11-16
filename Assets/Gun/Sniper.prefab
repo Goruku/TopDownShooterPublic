@@ -144,10 +144,10 @@ MonoBehaviour:
   hammerChamberLinks:
   - active: 1
     gunPartActed: {fileID: 5347526558128667472}
-    gunPartReacting: {fileID: 2290686322437082006}
+    gunPartReacting: {fileID: 981598621644742603}
   chamberBarrelLinks:
   - active: 1
-    gunPartActed: {fileID: 2290686322437082006}
+    gunPartActed: {fileID: 981598621644742603}
     gunPartReacting: {fileID: 2057199227659246842}
   barrelBulletFactoryLinks:
   - active: 1
@@ -159,7 +159,7 @@ MonoBehaviour:
   - {fileID: 5347526558128667472}
   propellantTanks: []
   chambers:
-  - {fileID: 2290686322437082006}
+  - {fileID: 981598621644742603}
   barrels:
   - {fileID: 2057199227659246842}
   bulletFactories:
@@ -443,7 +443,7 @@ MonoBehaviour:
   gunFrame: {fileID: 8792730700165747778}
   shouldUpdateBindings: 1
   playerActionOverride: 
-  doubleAction: 1
+  doubleAction: 0
   safety: 0
   triggerEventType: 1
 --- !u!1 &6798296365231213928
@@ -455,7 +455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 234152177193595672}
-  - component: {fileID: 2290686322437082006}
+  - component: {fileID: 981598621644742603}
   m_Layer: 0
   m_Name: Chamber
   m_TagString: Untagged
@@ -478,7 +478,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4637774157661582015}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2290686322437082006
+--- !u!114 &981598621644742603
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -487,14 +487,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6798296365231213928}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e33f35e2852146543b8fdfd7e1d4b317, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e36b94e56ab0344bb50875f605fe3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 8792730700165747778}
   externalPropellant: {fileID: 0}
   caliber: {fileID: 11400000, guid: 044cf8d4e681e2b4593bf336c384abf6, type: 2}
-  round: {fileID: 0}
+  round: {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
   fireSound: {fileID: 8300000, guid: 9339134a9727c1a48be368477e220657, type: 3}
   emptySound: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
   jam: {fileID: 0}
@@ -502,6 +502,10 @@ MonoBehaviour:
     gunRandomness: 0.2
     gunIncidence: 0.8
   gunParts: []
+  chamberHammerLinks:
+  - active: 1
+    gunPartActed: {fileID: 981598621644742603}
+    gunPartReacting: {fileID: 5347526558128667472}
 --- !u!1 &7395539360912291533
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,17 +552,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 8792730700165747778}
-  chamber: {fileID: 2290686322437082006}
+  shouldUpdateBindings: 0
+  playerActionOverride: 
+  chamber: {fileID: 981598621644742603}
   ammunition:
   - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
-  - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
+  defaultMagazine:
   - {fileID: 11400000, guid: 65e72a5acb73ae948a1b1d0a9e365478, type: 2}
   hammerFeederLinks:
   - active: 1

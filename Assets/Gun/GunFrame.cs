@@ -93,8 +93,8 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
     {
         foreach (var link in gunLinks)
         {
-            if (!link.active) continue;
             link.UnLink();
+            if (!link.active) continue;
             link.Link();
         }
     }

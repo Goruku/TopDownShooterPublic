@@ -54,7 +54,7 @@ public class PlayerGrabber : MonoBehaviour
             if (gunFrame && !gunFrame.owner)
             {
                 Debug.Log("You tried to pick up a gun!");
-                gunMounter.SwapGun(gunFrame);
+                gunMounter.SwapGun(gunMounter.transform, gunFrame);
             }
         }
     }

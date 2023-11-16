@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 7165926730860553522}
   - component: {fileID: 8204352501361059434}
   - component: {fileID: 6329659386538085008}
+  - component: {fileID: 6947341799522201581}
   m_Layer: 0
   m_Name: Barrel 0
   m_TagString: Untagged
@@ -379,6 +380,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6947341799522201581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2356572520111937848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d17c87236c8f245b9318f56ce90f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 6071787193498473071}
+  shouldUpdateBindings: 0
+  playerActionOverride: 
+  chamber: {fileID: 7165926730860553522}
+  ammunition:
+  - {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
+  defaultMagazine:
+  - {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
+  hammerFeederLinks:
+  - active: 1
+    gunPartActed: {fileID: 8204352501361059434}
+    gunPartReacting: {fileID: 6947341799522201581}
 --- !u!1 &2710691018971778216
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +450,7 @@ GameObject:
   - component: {fileID: 2253490375993076750}
   - component: {fileID: 1492210645323737519}
   - component: {fileID: 3167951119629828078}
+  - component: {fileID: 5210360526733969153}
   m_Layer: 0
   m_Name: Barrel 1
   m_TagString: Untagged
@@ -612,6 +639,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5210360526733969153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4584406534402367771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d17c87236c8f245b9318f56ce90f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityMultiplier: 1
+  gunFrame: {fileID: 6071787193498473071}
+  shouldUpdateBindings: 0
+  playerActionOverride: 
+  chamber: {fileID: 2253490375993076750}
+  ammunition:
+  - {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
+  defaultMagazine:
+  - {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
+  hammerFeederLinks:
+  - active: 1
+    gunPartActed: {fileID: 1492210645323737519}
+    gunPartReacting: {fileID: 5210360526733969153}
 --- !u!1 &6147780057560402349
 GameObject:
   m_ObjectHideFlags: 0
@@ -661,6 +713,7 @@ MonoBehaviour:
   shouldUpdateBindings: 1
   playerActionOverride: 
   doubleAction: 1
+  safety: 0
   triggerEventType: 0
   currentActiveTrigger: 0
   triggerHammerLinks:
@@ -721,4 +774,5 @@ MonoBehaviour:
   shouldUpdateBindings: 1
   playerActionOverride: AlternateFire
   doubleAction: 1
+  safety: 0
   triggerEventType: 0
