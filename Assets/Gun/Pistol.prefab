@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
-  gunFrame: {fileID: 0}
+  gunFrame: {fileID: 5649832260021112759}
   firingLocation: {fileID: 2240840841545121934}
 --- !u!114 &3145445574262745501
 MonoBehaviour:

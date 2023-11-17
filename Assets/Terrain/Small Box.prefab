@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2061324095966879539}
   - component: {fileID: 6962120250074692565}
   - component: {fileID: -3142529122142943264}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Small Box
-  m_TagString: Untagged
+  m_TagString: VisBlocker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

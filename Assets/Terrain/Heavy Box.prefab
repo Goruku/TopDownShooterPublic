@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7723997940883620916}
   - component: {fileID: 2142220603947471116}
   - component: {fileID: 8225082164218654962}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Heavy Box
-  m_TagString: Untagged
+  m_TagString: VisBlocker
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
