@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -12,7 +13,10 @@ public class SmartFOV : MonoBehaviour
     public LayerMask layerMask;
     public MeshFilter meshFilter;
     public Transform anchor;
-    [FormerlySerializedAs("vertex")] public List<Vector3> vertices = new ();
+
+    public float distance = 15;
+    public bool circles = true;
+    public List<Vector3> vertices = new ();
     public List<Vector3> meshPositions = new ();
 
     private void Start()
@@ -44,8 +48,11 @@ public class SmartFOV : MonoBehaviour
         foreach (var vertex in vertices)
         {
             var raycastHit2D = Physics2D.Linecast(currentPosition, vertex, layerMask);
-            meshPositions.Add(raycastHit2D.point);
+            if (raycastHit2D.distance < circleCollider2D.radius)
+                meshPositions.Add(raycastHit2D.point);
         }
+        
+        meshPositions = meshPositions.OrderBy(vertexPosition => Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
         
         var rayCount = meshPositions.Count - 1;
         
@@ -54,12 +61,19 @@ public class SmartFOV : MonoBehaviour
             return;
         }
         
-        var tri = new int[3 * (rayCount - 1)];
+        var tri = new int[3 * rayCount];
         for (int i = 1; i < rayCount - 1; i++)
         {
             tri[3*i] = 0;
             tri[3*i + 1] = i;
             tri[3*i + 2] = i - 1;
+        }
+
+        if (circles)
+        {
+            tri[3*rayCount - 3] = 0;
+            tri[3*rayCount - 2] = 1;
+            tri[3 * rayCount - 1] = rayCount;
         }
         
         meshFilter.mesh.triangles = new int[] { };
