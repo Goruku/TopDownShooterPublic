@@ -13,8 +13,7 @@ public class SmartFOV : MonoBehaviour
     public LayerMask layerMask;
     public MeshFilter meshFilter;
     public Transform anchor;
-
-    public float distance = 15;
+    
     public bool circles = true;
     public List<Vector3> vertices = new ();
     public List<Vector3> meshPositions = new ();
@@ -44,39 +43,54 @@ public class SmartFOV : MonoBehaviour
             
             this.vertices.AddRange(vertices);
         }
+
+        HashSet<Vector2> vertexSet = new HashSet<Vector2>();
+        
+        vertices = vertices.OrderBy(vertexPosition =>
+        {
+            vertexSet.Add(vertexPosition);
+            return Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2];
+        }).ToList();
         
         foreach (var vertex in vertices)
         {
-            var raycastHit2D = Physics2D.Linecast(currentPosition, vertex, layerMask);
-            if (raycastHit2D.distance < circleCollider2D.radius)
-                meshPositions.Add(raycastHit2D.point);
+            var linecastHit = Physics2D.Linecast(currentPosition, vertex, layerMask);
+
+            if (vertexSet.Contains(linecastHit.point))
+            {
+                var distanceVector = vertex - currentPosition;
+                var raycastHit = Physics2D.Raycast(vertex, distanceVector,
+                    circleCollider2D.radius - distanceVector.magnitude, layerMask);
+                meshPositions.Add(raycastHit.point);
+            }
+            else
+            {
+                meshPositions.Add(linecastHit.point);
+            }
         }
         
-        meshPositions = meshPositions.OrderBy(vertexPosition => Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
+        var triCount = meshPositions.Count - 1;
         
-        var rayCount = meshPositions.Count - 1;
-        
-        if (rayCount <= 0)
+        if (triCount <= 0)
         {
             return;
         }
-        
-        var tri = new int[3 * rayCount];
-        for (int i = 1; i < rayCount - 1; i++)
-        {
-            tri[3*i] = 0;
-            tri[3*i + 1] = i;
-            tri[3*i + 2] = i - 1;
-        }
+        meshPositions.Add(meshPositions[1]);
 
+        int[] tri = new int[3 * triCount];
         if (circles)
         {
-            tri[3*rayCount - 3] = 0;
-            tri[3*rayCount - 2] = 1;
-            tri[3 * rayCount - 1] = rayCount;
+            tri[3 * triCount - 3] = 0;
+            tri[3 * triCount - 2] = meshPositions.Count - 1;
+            tri[3 * triCount - 1] = 1;
+        }
+        for (int i = 0; i < triCount; i++)
+        {
+            tri[3*i] = 0;
+            tri[3*i + 1] = i + 2;
+            tri[3*i + 2] = i + 1;
         }
         
-        meshFilter.mesh.triangles = new int[] { };
         meshFilter.mesh.vertices = meshPositions.ToArray();
         meshFilter.mesh.triangles = tri;
     }
