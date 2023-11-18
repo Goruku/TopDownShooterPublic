@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -13,7 +14,9 @@ public class SmartFOV : MonoBehaviour
     public LayerMask layerMask;
     public MeshFilter meshFilter;
     public Transform anchor;
-    
+
+    public float similitude = 0.0009765625f;
+    public float pierce = 0;
     public bool circles = true;
     public List<Vector3> vertices = new ();
     public List<Vector3> meshPositions = new ();
@@ -26,7 +29,7 @@ public class SmartFOV : MonoBehaviour
     private void FixedUpdate()
     {
         meshFilter.mesh = null;
-        Collider2D[] colliders = new Collider2D[25];
+        Collider2D[] colliders = new Collider2D[50];
         circleCollider2D.OverlapCollider(new ContactFilter2D(), colliders);
         var currentPosition = anchor.position;
         meshPositions.Clear();
@@ -43,32 +46,42 @@ public class SmartFOV : MonoBehaviour
             
             this.vertices.AddRange(vertices);
         }
-
-        HashSet<Vector2> vertexSet = new HashSet<Vector2>();
-        
-        vertices = vertices.OrderBy(vertexPosition =>
-        {
-            vertexSet.Add(vertexPosition);
-            return Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2];
-        }).ToList();
+        vertices = vertices.OrderBy(vertexPosition => Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
         
         foreach (var vertex in vertices)
         {
             var linecastHit = Physics2D.Linecast(currentPosition, vertex, layerMask);
-
-            if (vertexSet.Contains(linecastHit.point))
+            var distanceVector = vertex - currentPosition;
+            
+            if (linecastHit.distance <= 0)
             {
-                var distanceVector = vertex - currentPosition;
-                var raycastHit = Physics2D.Raycast(vertex, distanceVector,
-                    circleCollider2D.radius - distanceVector.magnitude, layerMask);
-                meshPositions.Add(raycastHit.point);
+                meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
+            } 
+            
+            //arbitrary low distance "close enough to be the same" also power of two
+            else if (((Vector2) vertex - linecastHit.point).magnitude <= similitude)
+            {
+                meshPositions.Add(vertex);
+
+                var raycastHits = new RaycastHit2D[2];
+                Physics2D.RaycastNonAlloc(vertex +distanceVector.normalized*pierce, distanceVector, raycastHits,
+                    float.MaxValue, layerMask);
+                if (raycastHits[1].IsUnityNull()) continue;
+                if (raycastHits[1].distance <= 0)
+                {
+                    meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
+                }
+                else
+                {
+                    //meshPositions.Add(raycastHits[1].point);
+                }
             }
             else
             {
                 meshPositions.Add(linecastHit.point);
             }
         }
-        
+
         var triCount = meshPositions.Count - 1;
         
         if (triCount <= 0)
