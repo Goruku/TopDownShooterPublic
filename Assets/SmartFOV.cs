@@ -15,6 +15,14 @@ public class SmartFOV : MonoBehaviour
     public MeshFilter meshFilter;
     public Transform anchor;
 
+    public bool addOutsideVertex = false;
+    public bool addSimilarVertex = true;
+    public bool addLineIntersection = true;
+    public bool addRaycastLimit = true;
+    public bool addRaycast = true;
+    public int raycastChosen = 1;
+    public int raycastDepth = 2;
+
     public float similitude = 0.0009765625f;
     public float pierce = 0;
     public bool circles = true;
@@ -53,32 +61,41 @@ public class SmartFOV : MonoBehaviour
             var linecastHit = Physics2D.Linecast(currentPosition, vertex, layerMask);
             var distanceVector = vertex - currentPosition;
             
-            if (linecastHit.distance <= 0)
+            if (linecastHit.distance >= circleCollider2D.radius)
             {
-                meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
+                if (addOutsideVertex)
+                    meshPositions.Add(vertex);
+                continue;
             } 
             
             //arbitrary low distance "close enough to be the same" also power of two
-            else if (((Vector2) vertex - linecastHit.point).magnitude <= similitude)
+            if (((Vector2) vertex - linecastHit.point).magnitude <= similitude)
             {
-                meshPositions.Add(vertex);
-
-                var raycastHits = new RaycastHit2D[2];
-                Physics2D.RaycastNonAlloc(vertex +distanceVector.normalized*pierce, distanceVector, raycastHits,
-                    float.MaxValue, layerMask);
-                if (raycastHits[1].IsUnityNull()) continue;
-                if (raycastHits[1].distance <= 0)
+                if (addSimilarVertex)
+                    meshPositions.Add(vertex);
+                var raycastHits = new RaycastHit2D[raycastDepth];
+                Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized*pierce),
+                    2*distanceVector, raycastHits, circleCollider2D.radius, layerMask);
+                
+                Debug.DrawRay(vertex, distanceVector, Color.red);
+                
+                if (((Vector2) currentPosition - raycastHits[raycastChosen].point).magnitude >= circleCollider2D.radius)
                 {
-                    meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
+                    if (addRaycastLimit)
+                        meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
                 }
                 else
                 {
-                    //meshPositions.Add(raycastHits[1].point);
+                    if (addRaycast)
+                    {
+                        meshPositions.Add(raycastHits[raycastChosen].point);
+                    }
                 }
             }
             else
             {
-                meshPositions.Add(linecastHit.point);
+                if (addLineIntersection)
+                    meshPositions.Add(linecastHit.point);
             }
         }
 
