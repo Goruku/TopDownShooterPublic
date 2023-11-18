@@ -37,49 +37,45 @@ public class SmartFOV : MonoBehaviour
     private void FixedUpdate()
     {
         meshFilter.mesh = null;
-        Collider2D[] colliders = new Collider2D[50];
-        circleCollider2D.OverlapCollider(new ContactFilter2D(), colliders);
-        var currentPosition = anchor.position;
-        meshPositions.Clear();
-        vertices.Clear();
+        Vector3 currentPosition = anchor.position;
+        ExtractVertices();
+        WindChunkVertices(currentPosition);
+        OldCast(currentPosition);
+        BuildMesh();
+    }
+
+    private void NewCast()
+    {
+        
+    }
+
+    private void OldCast(Vector3 currentPosition)
+    {
         meshPositions.Add(currentPosition);
-        
-        foreach (var collider in colliders)
-        {
-            if (!collider) break;
-            if (!collider.CompareTag("VisBlocker")) continue;
-            
-            List<Vector3> vertices = new List<Vector3>();
-            collider.CreateMesh(false, false).GetVertices(vertices);
-            
-            this.vertices.AddRange(vertices);
-        }
-        vertices = vertices.OrderBy(vertexPosition => Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
-        
         foreach (var vertex in vertices)
         {
             var linecastHit = Physics2D.Linecast(currentPosition, vertex, layerMask);
             var distanceVector = vertex - currentPosition;
-            
+
             if (linecastHit.distance >= circleCollider2D.radius)
             {
                 if (addOutsideVertex)
                     meshPositions.Add(vertex);
                 continue;
-            } 
-            
+            }
+
             //arbitrary low distance "close enough to be the same" also power of two
-            if (((Vector2) vertex - linecastHit.point).magnitude <= similitude)
+            if (((Vector2)vertex - linecastHit.point).magnitude <= similitude)
             {
                 if (addSimilarVertex)
                     meshPositions.Add(vertex);
                 var raycastHits = new RaycastHit2D[raycastDepth];
-                Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized*pierce),
-                    2*distanceVector, raycastHits, circleCollider2D.radius, layerMask);
-                
+                Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized * pierce),
+                    2 * distanceVector, raycastHits, circleCollider2D.radius, layerMask);
+
                 Debug.DrawRay(vertex, distanceVector, Color.red);
-                
-                if (((Vector2) currentPosition - raycastHits[raycastChosen].point).magnitude >= circleCollider2D.radius)
+
+                if (((Vector2)currentPosition - raycastHits[raycastChosen].point).magnitude >= circleCollider2D.radius)
                 {
                     if (addRaycastLimit)
                         meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
@@ -98,7 +94,35 @@ public class SmartFOV : MonoBehaviour
                     meshPositions.Add(linecastHit.point);
             }
         }
+    }
 
+    private void ExtractVertices()
+    {
+        Collider2D[] colliders = new Collider2D[50];
+        circleCollider2D.OverlapCollider(new ContactFilter2D(), colliders);
+        meshPositions.Clear();
+        vertices.Clear();
+
+        foreach (var collider in colliders)
+        {
+            if (!collider) break;
+            if (!collider.CompareTag("VisBlocker")) continue;
+
+            List<Vector3> vertices = new List<Vector3>();
+            collider.CreateMesh(false, false).GetVertices(vertices);
+
+            this.vertices.AddRange(vertices);
+        }
+    }
+
+    private void WindChunkVertices(Vector3 currentPosition)
+    {
+        vertices = vertices.OrderBy(vertexPosition =>
+            Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
+    }
+
+    private void BuildMesh()
+    {
         var triCount = meshPositions.Count - 1;
         
         if (triCount <= 0)
