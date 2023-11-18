@@ -15,6 +15,9 @@ public class SmartFOV : MonoBehaviour
     public MeshFilter meshFilter;
     public Transform anchor;
 
+    public bool extractNewVertices = true;
+    public bool windChunkVertices = true;
+
     public bool addOutsideVertex = false;
     public bool addSimilarVertex = true;
     public bool addLineIntersection = true;
@@ -22,6 +25,8 @@ public class SmartFOV : MonoBehaviour
     public bool addRaycast = true;
     public int raycastChosen = 1;
     public int raycastDepth = 2;
+
+    public float normalCullThreshold = -0.98f;
 
     public float similitude = 0.0009765625f;
     public float pierce = 0;
@@ -38,8 +43,10 @@ public class SmartFOV : MonoBehaviour
     {
         meshFilter.mesh = null;
         Vector3 currentPosition = anchor.position;
-        ExtractVertices();
-        WindChunkVertices(currentPosition);
+        if (extractNewVertices)
+            ExtractNewVertices();
+        if (windChunkVertices)
+            WindChunkVertices(currentPosition);
         OldCast(currentPosition);
         BuildMesh();
     }
@@ -67,36 +74,28 @@ public class SmartFOV : MonoBehaviour
             //arbitrary low distance "close enough to be the same" also power of two
             if (((Vector2)vertex - linecastHit.point).magnitude <= similitude)
             {
+                if (addRaycast)
+                {
+                    var raycastHits = new RaycastHit2D[raycastDepth];
+                    Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized * pierce),
+                        2 * distanceVector, raycastHits, circleCollider2D.radius, layerMask);
+                    
+                    linecastHit = Physics2D.Linecast(raycastHits[raycastChosen].point, vertex, layerMask);
+                    Debug.DrawLine(raycastHits[raycastChosen].point, vertex);
+                    if (((Vector2)vertex - linecastHit.point).magnitude <= similitude)
+                        meshPositions.Add(raycastHits[raycastChosen].point);
+                }
                 if (addSimilarVertex)
                     meshPositions.Add(vertex);
-                var raycastHits = new RaycastHit2D[raycastDepth];
-                Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized * pierce),
-                    2 * distanceVector, raycastHits, circleCollider2D.radius, layerMask);
-
-                Debug.DrawRay(vertex, distanceVector, Color.red);
-
-                if (((Vector2)currentPosition - raycastHits[raycastChosen].point).magnitude >= circleCollider2D.radius)
-                {
-                    if (addRaycastLimit)
-                        meshPositions.Add(circleCollider2D.radius * distanceVector.normalized);
-                }
-                else
-                {
-                    if (addRaycast)
-                    {
-                        meshPositions.Add(raycastHits[raycastChosen].point);
-                    }
-                }
             }
-            else
+            else if (addLineIntersection && linecastHit.distance > 0)
             {
-                if (addLineIntersection)
-                    meshPositions.Add(linecastHit.point);
+                meshPositions.Add(linecastHit.point);
             }
         }
     }
 
-    private void ExtractVertices()
+    private void ExtractNewVertices()
     {
         Collider2D[] colliders = new Collider2D[50];
         circleCollider2D.OverlapCollider(new ContactFilter2D(), colliders);
