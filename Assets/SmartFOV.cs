@@ -26,6 +26,9 @@ public class SmartFOV : MonoBehaviour
     public int raycastChosen = 1;
     public int raycastDepth = 2;
 
+    public int fanCount = 5;
+    public float angle = 90;
+
     public float normalCullThreshold = -0.98f;
 
     public float similitude = 0.0009765625f;
@@ -47,13 +50,51 @@ public class SmartFOV : MonoBehaviour
             ExtractNewVertices();
         if (windChunkVertices)
             WindChunkVertices(currentPosition);
-        OldCast(currentPosition);
+        FanCast(currentPosition);
         BuildMesh();
     }
 
-    private void NewCast()
+    private void FanCast(Vector3 currentPosition)
     {
-        
+        meshPositions.Add(currentPosition);
+        var startAngle = -angle / 2;
+        var angleInterval = angle / fanCount;
+        for (int i = 0; i < fanCount; i++)
+        {
+            var rayHit = Physics2D.Raycast(currentPosition,
+                Quaternion.AngleAxis(startAngle + angleInterval * i, Vector3.forward) * Vector3.up,
+                circleCollider2D.radius, layerMask);
+            if (rayHit.distance >= 0)
+                meshPositions.Add(rayHit.point);
+        }
+    }
+
+    private void NewCast(Vector3 currentPosition)
+    {
+        meshPositions.Add(currentPosition);
+        foreach (var vertex in vertices)
+        {
+            var distanceVector = vertex - currentPosition;
+            var raycastHits = new RaycastHit2D[raycastDepth];
+            Physics2D.RaycastNonAlloc(currentPosition, distanceVector, raycastHits, circleCollider2D.radius, layerMask);
+            if (addOutsideVertex && raycastHits[0].distance <= 0)
+            {
+                meshPositions.Add(distanceVector.normalized * circleCollider2D.radius);
+            }
+            if (addSimilarVertex)
+                meshPositions.Add(raycastHits[0].point);
+            foreach (var hit in raycastHits)
+            {
+                if (!addRaycast) break;
+                var linecast = Physics2D.Linecast(hit.point, vertex);
+                if ((linecast.point - (Vector2)currentPosition).magnitude <= similitude)
+                {
+                    continue;
+                }
+                meshPositions.Add(linecast.point);
+                break;
+            }
+        }
     }
 
     private void OldCast(Vector3 currentPosition)
