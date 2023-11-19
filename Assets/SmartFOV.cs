@@ -7,185 +7,108 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(PolygonCollider2D))]
 public class SmartFOV : MonoBehaviour
 {
     public CircleCollider2D circleCollider2D;
     public LayerMask layerMask;
     public MeshFilter meshFilter;
+    public PolygonCollider2D polygonCollider2D;
     public Transform anchor;
 
-    public bool extractNewVertices = true;
-    public bool windChunkVertices = true;
+    public uint attachedPlayer;
 
-    public bool addOutsideVertex = false;
-    public bool addSimilarVertex = true;
-    public bool addLineIntersection = true;
-    public bool addRaycastLimit = true;
-    public bool addRaycast = true;
-    public int raycastChosen = 1;
-    public int raycastDepth = 2;
+    public bool fanCast = true;
+    public Vector2[] contactPoints;
 
-    public int fanCount = 5;
+    public int fanCount = 120;
     public float angle = 90;
+    public float differentialDeadzone = 1;
+    public Quaternion lastAngle;
+    public Vector3 lastPosition;
+    public AnimationCurve rayConcentration = new();
 
-    public float normalCullThreshold = -0.98f;
-
-    public float similitude = 0.0009765625f;
-    public float pierce = 0;
-    public bool circles = true;
-    public List<Vector3> vertices = new ();
-    public List<Vector3> meshPositions = new ();
-
+    public ContactFilter2D viewPointRenderContactFilter = new ContactFilter2D(){useLayerMask = true, useTriggers = true};
+    public Collider2D[] colliders;
+    
+    public int maxColliderCount = 50;
+    
     private void Start()
     {
         meshFilter = GetComponent<MeshFilter>();
+        polygonCollider2D = GetComponent<PolygonCollider2D>();
     }
 
     private void FixedUpdate()
     {
-        meshFilter.mesh = null;
         Vector3 currentPosition = anchor.position;
-        if (extractNewVertices)
-            ExtractNewVertices();
-        if (windChunkVertices)
-            WindChunkVertices(currentPosition);
-        FanCast(currentPosition);
-        BuildMesh();
+        contactPoints = new Vector2[fanCount + 1];
+        if (fanCast)
+        {   
+            var innerProduct = Quaternion.Dot(anchor.rotation, lastAngle);
+            if (lastPosition != currentPosition || 1 - innerProduct * innerProduct >= differentialDeadzone)
+            {
+                FanCast(currentPosition);
+                SetPolygonCollider();
+                lastAngle = anchor.rotation;
+                lastPosition = currentPosition;
+            }
+        }
+        else
+        {
+            ClearPolygonCollider();
+        }
+    }
+
+    private void Update()
+    {
+        FlagObjectsForRender();
     }
 
     private void FanCast(Vector3 currentPosition)
     {
-        meshPositions.Add(currentPosition);
-        var startAngle = -angle / 2;
-        var angleInterval = angle / fanCount;
+        float angleInterval = 1f / fanCount;
+        var angleSplit = -angle / 2;
         for (int i = 0; i < fanCount; i++)
         {
+            var direction = anchor.rotation *
+                            Quaternion.AngleAxis(angleSplit*rayConcentration.Evaluate(i*angleInterval), Vector3.forward) * Vector3.up;
             var rayHit = Physics2D.Raycast(currentPosition,
-                Quaternion.AngleAxis(startAngle + angleInterval * i, Vector3.forward) * Vector3.up,
+                direction,
                 circleCollider2D.radius, layerMask);
-            if (rayHit.distance >= 0)
-                meshPositions.Add(rayHit.point);
+            if (rayHit.distance >= circleCollider2D.radius - 0.001f)
+            {
+                contactPoints[i] = direction.normalized * circleCollider2D.radius;
+            }
+            else contactPoints[i] = rayHit.point;
+                
         }
+        contactPoints[contactPoints.Length - 1] = anchor.position;
     }
 
-    private void NewCast(Vector3 currentPosition)
+    private void SetPolygonCollider()
     {
-        meshPositions.Add(currentPosition);
-        foreach (var vertex in vertices)
-        {
-            var distanceVector = vertex - currentPosition;
-            var raycastHits = new RaycastHit2D[raycastDepth];
-            Physics2D.RaycastNonAlloc(currentPosition, distanceVector, raycastHits, circleCollider2D.radius, layerMask);
-            if (addOutsideVertex && raycastHits[0].distance <= 0)
-            {
-                meshPositions.Add(distanceVector.normalized * circleCollider2D.radius);
-            }
-            if (addSimilarVertex)
-                meshPositions.Add(raycastHits[0].point);
-            foreach (var hit in raycastHits)
-            {
-                if (!addRaycast) break;
-                var linecast = Physics2D.Linecast(hit.point, vertex);
-                if ((linecast.point - (Vector2)currentPosition).magnitude <= similitude)
-                {
-                    continue;
-                }
-                meshPositions.Add(linecast.point);
-                break;
-            }
-        }
+        polygonCollider2D.points = contactPoints;
+        meshFilter.mesh = polygonCollider2D.CreateMesh(false, false);
     }
 
-    private void OldCast(Vector3 currentPosition)
+    private void ClearPolygonCollider()
     {
-        meshPositions.Add(currentPosition);
-        foreach (var vertex in vertices)
-        {
-            var linecastHit = Physics2D.Linecast(currentPosition, vertex, layerMask);
-            var distanceVector = vertex - currentPosition;
-
-            if (linecastHit.distance >= circleCollider2D.radius)
-            {
-                if (addOutsideVertex)
-                    meshPositions.Add(vertex);
-                continue;
-            }
-
-            //arbitrary low distance "close enough to be the same" also power of two
-            if (((Vector2)vertex - linecastHit.point).magnitude <= similitude)
-            {
-                if (addRaycast)
-                {
-                    var raycastHits = new RaycastHit2D[raycastDepth];
-                    Physics2D.RaycastNonAlloc(vertex + (distanceVector.normalized * pierce),
-                        2 * distanceVector, raycastHits, circleCollider2D.radius, layerMask);
-                    
-                    linecastHit = Physics2D.Linecast(raycastHits[raycastChosen].point, vertex, layerMask);
-                    Debug.DrawLine(raycastHits[raycastChosen].point, vertex);
-                    if (((Vector2)vertex - linecastHit.point).magnitude <= similitude)
-                        meshPositions.Add(raycastHits[raycastChosen].point);
-                }
-                if (addSimilarVertex)
-                    meshPositions.Add(vertex);
-            }
-            else if (addLineIntersection && linecastHit.distance > 0)
-            {
-                meshPositions.Add(linecastHit.point);
-            }
-        }
+        polygonCollider2D.points = null;
+        meshFilter.mesh = null;
     }
 
-    private void ExtractNewVertices()
+    private void FlagObjectsForRender()
     {
-        Collider2D[] colliders = new Collider2D[50];
-        circleCollider2D.OverlapCollider(new ContactFilter2D(), colliders);
-        meshPositions.Clear();
-        vertices.Clear();
-
+        colliders = new Collider2D[maxColliderCount];
+        polygonCollider2D.OverlapCollider(viewPointRenderContactFilter, colliders);
         foreach (var collider in colliders)
         {
-            if (!collider) break;
-            if (!collider.CompareTag("VisBlocker")) continue;
-
-            List<Vector3> vertices = new List<Vector3>();
-            collider.CreateMesh(false, false).GetVertices(vertices);
-
-            this.vertices.AddRange(vertices);
+            if (collider)
+            {
+                collider.GetComponent<VariableRender>().seenBy |= attachedPlayer;
+            }
         }
     }
-
-    private void WindChunkVertices(Vector3 currentPosition)
-    {
-        vertices = vertices.OrderBy(vertexPosition =>
-            Quaternion.LookRotation(Vector3.forward, vertexPosition - currentPosition).eulerAngles[2]).ToList();
-    }
-
-    private void BuildMesh()
-    {
-        var triCount = meshPositions.Count - 1;
-        
-        if (triCount <= 0)
-        {
-            return;
-        }
-        meshPositions.Add(meshPositions[1]);
-
-        int[] tri = new int[3 * triCount];
-        if (circles)
-        {
-            tri[3 * triCount - 3] = 0;
-            tri[3 * triCount - 2] = meshPositions.Count - 1;
-            tri[3 * triCount - 1] = 1;
-        }
-        for (int i = 0; i < triCount; i++)
-        {
-            tri[3*i] = 0;
-            tri[3*i + 1] = i + 2;
-            tri[3*i + 2] = i + 1;
-        }
-        
-        meshFilter.mesh.vertices = meshPositions.ToArray();
-        meshFilter.mesh.triangles = tri;
-    }
+    
 }

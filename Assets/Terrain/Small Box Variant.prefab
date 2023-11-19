@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1731428419916295985
+--- !u!1001 &7061373409460720208
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,27 +10,47 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 515858303174107858, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_Color.b
-      value: 0.4433962
+      value: 0.11273284
       objectReference: {fileID: 0}
     - target: {fileID: 515858303174107858, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_Color.g
-      value: 0.4433962
+      value: 0.5895426
       objectReference: {fileID: 0}
     - target: {fileID: 515858303174107858, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_Color.r
-      value: 0.4433962
+      value: 0.7169812
       objectReference: {fileID: 0}
     - target: {fileID: 891981199123102649, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_Mass
-      value: 1000
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 891981199123102649, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
+      propertyPath: m_LinearDrag
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 891981199123102649, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
+      propertyPath: m_AngularDrag
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.4591
       objectReference: {fileID: 0}
     - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.164
+      value: 8.33
       objectReference: {fileID: 0}
     - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -30.438
+      value: -24.95
       objectReference: {fileID: 0}
     - target: {fileID: 5891791999680865692, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_LocalPosition.z
@@ -66,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6132681715752039519, guid: f3f0ca756654a3643a38a6822e7bcc48, type: 3}
       propertyPath: m_Name
-      value: Big Box (3) Variant
+      value: Small Box Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
