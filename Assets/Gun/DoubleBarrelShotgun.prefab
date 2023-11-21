@@ -137,10 +137,16 @@ MonoBehaviour:
     gunPartActed: {fileID: 4953026683196659756}
     gunPartReacting: {fileID: 1974068334580983422}
   triggers: []
-  hammers: []
+  hammers:
+  - {fileID: 8204352501361059434}
+  - {fileID: 1492210645323737519}
   propellantTanks: []
-  chambers: []
-  barrels: []
+  chambers:
+  - {fileID: 7165926730860553522}
+  - {fileID: 2253490375993076750}
+  barrels:
+  - {fileID: 5072468739876262980}
+  - {fileID: 4953026683196659756}
   bulletFactories: []
   gunParts: []
 --- !u!58 &5333352542992695588
@@ -744,7 +750,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

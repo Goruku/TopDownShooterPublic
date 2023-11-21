@@ -10,7 +10,9 @@ using UnityEngine.Serialization;
 public class GunMounter : MonoBehaviour
 {
     public GunFrame gunFrame;
-
+    public GunMounterEvent gunFrameChanged = (mounter, frame) => {};
+    
+    
     public void SwapGun(Transform target, GunFrame otherGunFrame)
     {
         var formerParent = otherGunFrame.transform.parent;
@@ -21,6 +23,7 @@ public class GunMounter : MonoBehaviour
 
         gunFrame.transform.localPosition = new Vector3();
         gunFrame.transform.rotation = new Quaternion();
+        gunFrameChanged(this, gunFrame);
     }
 
     private void OnEnable()
@@ -40,4 +43,6 @@ public class GunMounter : MonoBehaviour
         OnDisable();
         OnEnable();
     }
+
+    public delegate void GunMounterEvent(GunMounter gunMounter, GunFrame gunFrame);
 }

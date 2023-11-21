@@ -14,7 +14,7 @@ public class GunHammer : InteractibleGunPart
     public HammerEvent started = state => {};
     public HammerEvent canceled = state => {};
 
-    private bool isPulled = false;
+    private bool _isPulled = false;
     
     protected override string DefaultPlayerAction
     {
@@ -23,25 +23,25 @@ public class GunHammer : InteractibleGunPart
 
     private void BasePulled(GunFrame.GunState gunState)
     {
-        isPulled = true;
+        _isPulled = true;
     }
 
     public void CallPulledIfNotPulled(GunFrame.GunState gunState)
     {
-        if (isPulled) return;
+        if (_isPulled) return;
         pulled(gunState);
     }
 
     public void CallPulledOnChamberEvent(GunFrame.Shot shot, Ammunition ammunition, GunFrame.GunState gunState)
     {
         Debug.Log("CalledPulledOnChamberEvent");
-        if (isPulled) return;
+        if (_isPulled) return;
         pulled(gunState);
     }
 
     private void BaseReleased(GunFrame.GunState gunState)
     {
-        isPulled = false;
+        _isPulled = false;
     }
 
     private new void OnEnable()
@@ -61,7 +61,7 @@ public class GunHammer : InteractibleGunPart
     protected override void BindPerformed(InputAction.CallbackContext callbackContext)
     {
         performed(gunFrame.GetState());
-        if (isPulled)
+        if (_isPulled)
             released(gunFrame.GetState());
         else
             pulled(gunFrame.GetState());
@@ -79,9 +79,14 @@ public class GunHammer : InteractibleGunPart
 
     public void AttemptStrike(GunFrame.GunState gunState)
     {
-        if (!isPulled) return;
-        isPulled = false;
+        if (!_isPulled) return;
+        _isPulled = false;
         struck(gunState);
+    }
+
+    public bool IsPulled()
+    {
+        return _isPulled;
     }
 
     public delegate void HammerEvent(GunFrame.GunState gunState);

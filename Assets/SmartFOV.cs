@@ -12,8 +12,8 @@ using UnityEngine.Tilemaps;
 public class SmartFOV : VariableRenderObserver
 {
     public CircleCollider2D circleCollider2D;
-    public LayerMask layerMask;
-    public ContactFilter2D cornerCastFilter;
+    public String bounceTagName = "VisBlockerMirror";
+    public ContactFilter2D visionBlockFilter;
     public float cornerCastSimilitude = 0.005f;
     public MeshFilter meshFilter;
     public PolygonCollider2D polygonCollider2D;
@@ -25,6 +25,7 @@ public class SmartFOV : VariableRenderObserver
 
     public int fanCount = 120;
     public float angle = 90;
+    public int maxBounce = 2;
     public float differentialDeadzone = 1;
     public Quaternion lastAngle;
     public Vector3 lastPosition;
@@ -44,13 +45,16 @@ public class SmartFOV : VariableRenderObserver
     private void FixedUpdate()
     {
         Vector3 currentPosition = anchor.position;
-        contactPoints = new Vector2[fanCount + 1];
+
         if (fanCast)
         {   
+            LinkedList<Vector2> variableContactPoints = new LinkedList<Vector2>();
             var innerProduct = Quaternion.Dot(anchor.rotation, lastAngle);
             if (lastPosition != currentPosition || 1 - innerProduct * innerProduct >= differentialDeadzone)
             {
-                FanCast(currentPosition);
+                FanCast(currentPosition, in variableContactPoints);
+                variableContactPoints.AddLast(currentPosition);
+                contactPoints = variableContactPoints.ToArray();
                 SetPolygonCollider();
                 lastAngle = anchor.rotation;
                 lastPosition = currentPosition;
@@ -77,7 +81,7 @@ public class SmartFOV : VariableRenderObserver
         FlagObjectsForRender();
     }
 
-    private void FanCast(Vector3 currentPosition)
+    private void FanCast(Vector3 currentPosition, in LinkedList<Vector2> variableContactPoints)
     {
         float angleInterval = 1f / fanCount;
         var angleSplit = -angle / 2;
@@ -87,13 +91,33 @@ public class SmartFOV : VariableRenderObserver
                             Quaternion.AngleAxis(angleSplit*rayConcentration.Evaluate(i*angleInterval), Vector3.forward) * Vector3.up;
             var rayHit = Physics2D.Raycast(currentPosition,
                 direction,
-                circleCollider2D.radius, layerMask);
+                circleCollider2D.radius, visionBlockFilter.layerMask);
+            
+            
+            float distanceLeft = rayHit.collider ? circleCollider2D.radius - rayHit.distance : circleCollider2D.radius;
+            Vector2 hitPosition = rayHit.collider ? rayHit.point : currentPosition;
+
+            var bounces = maxBounce;
+            while ( bounces > 0 && rayHit.collider && (rayHit.collider.CompareTag(bounceTagName)))
+            {
+                variableContactPoints.AddLast(rayHit.point);
+                direction = Vector2.Reflect(direction, rayHit.normal);
+                RaycastHit2D[] rayHits = new RaycastHit2D[2];
+                Physics2D.Raycast(hitPosition, direction, visionBlockFilter, rayHits);
+                rayHit = rayHits[1];
+                distanceLeft -= rayHit.distance;
+                hitPosition = rayHit.point;
+
+                bounces--;
+            }
             if (!rayHit.collider)
             {
-                contactPoints[i] = currentPosition + direction.normalized * circleCollider2D.radius;
+                variableContactPoints.AddLast(hitPosition + (Vector2) (direction.normalized * distanceLeft));
             }
-            else contactPoints[i] = rayHit.point;
-                
+            else
+            {
+                variableContactPoints.AddLast(rayHit.point);
+            }
         }
         contactPoints[contactPoints.Length - 1] = anchor.position;
     }
@@ -101,7 +125,7 @@ public class SmartFOV : VariableRenderObserver
     private void FindCornerVertices(List<Vector3> vertices)
     {
         Collider2D[] colliders = new Collider2D[50];
-        circleCollider2D.OverlapCollider(cornerCastFilter, colliders);
+        circleCollider2D.OverlapCollider(visionBlockFilter, colliders);
         foreach (var collider in this.colliders)
         {
             if (collider)
@@ -122,7 +146,7 @@ public class SmartFOV : VariableRenderObserver
     {
         var maxEndpoint = (Vector2) (vertices[index] - anchor.position).normalized * circleCollider2D.radius;
         var contacts = new RaycastHit2D[2];
-        Physics2D.Linecast(anchor.position, maxEndpoint, cornerCastFilter, contacts);
+        Physics2D.Linecast(anchor.position, maxEndpoint, visionBlockFilter, contacts);
         if (!contacts[0].collider) {
             polygon[2*index] = maxEndpoint;
             polygon[2*index + 1] = maxEndpoint;
@@ -130,7 +154,7 @@ public class SmartFOV : VariableRenderObserver
         }
         polygon[index] = contacts[0].point;
         var nextContactPoint = contacts[1].collider ? contacts[1].point : maxEndpoint;
-        var backwardsCast = Physics2D.Linecast(nextContactPoint, contacts[0].point, cornerCastFilter.layerMask);
+        var backwardsCast = Physics2D.Linecast(nextContactPoint, contacts[0].point, visionBlockFilter.layerMask);
         if ((backwardsCast.point - contacts[0].point).magnitude <= cornerCastSimilitude)
             polygon[2*index + 1] = nextContactPoint;
         else

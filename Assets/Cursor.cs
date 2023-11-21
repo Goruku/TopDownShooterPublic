@@ -10,6 +10,9 @@ public class Cursor : MonoBehaviour
 {
     public PlayerInput playerInput;
     public float cursorSpeed = 0.03f;
+    public Transform playerPosition;
+    public Vector3 lastNonZeroLookVector;
+    public TargetingRange targetingRange;
 
     public Camera activeCamera;
 
@@ -45,7 +48,9 @@ public class Cursor : MonoBehaviour
         else
         {
             var lookVector = callbackContext.ReadValue<Vector2>();
-            transform.position += (Vector3) lookVector.normalized * cursorSpeed;
+            if (lookVector != Vector2.zero)
+                lastNonZeroLookVector = lookVector;
+            transform.position = playerPosition.position + lastNonZeroLookVector.normalized * targetingRange.minRange + lastNonZeroLookVector * (targetingRange.maxRange - targetingRange.minRange);
         }
     }
 }

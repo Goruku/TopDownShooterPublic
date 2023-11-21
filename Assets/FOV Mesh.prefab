@@ -47,20 +47,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cca037a87df52b4d9c868eeb2f4dd4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attachedPlayer: 1
   circleCollider2D: {fileID: 0}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 64
-  cornerCastFilter:
-    useTriggers: 0
-    useLayerMask: 0
+  bounceTagName: VisBlockerMirror
+  visionBlockFilter:
+    useTriggers: 1
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
@@ -69,13 +68,13 @@ MonoBehaviour:
   meshFilter: {fileID: 6002738180617175472}
   polygonCollider2D: {fileID: 6803378267398583985}
   anchor: {fileID: 0}
-  attachedPlayer: 1
   fanCast: 1
   cornerCast: 0
   contactPoints:
   - {x: 0, y: 0}
   fanCount: 120
   angle: 90
+  maxBounce: 2
   differentialDeadzone: 0.001
   lastAngle: {x: 0, y: 0, z: 0, w: 0}
   lastPosition: {x: 0, y: 0, z: 0}

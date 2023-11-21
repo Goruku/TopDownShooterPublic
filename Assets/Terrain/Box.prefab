@@ -93,6 +93,8 @@ MonoBehaviour:
   renderers:
   - {fileID: 515858303174107858}
   seenBy: 0
+  showTo: 0
+  onlyShowTo: 0
 --- !u!1 &6132681715752039519
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +109,7 @@ GameObject:
   - component: {fileID: 8824246355640995488}
   m_Layer: 6
   m_Name: Box
-  m_TagString: VisBlocker
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
