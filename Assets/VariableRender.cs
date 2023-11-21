@@ -9,8 +9,9 @@ using UnityEngine.Serialization;
 public class VariableRender : MonoBehaviour
 {
     public List<Renderer> renderers = new ();
-    public uint seenBy;
-    public uint onlyObservableBy;
+    public uint seenBy = 0;
+    public uint showTo = 0;
+    public bool onlyShowTo = false;
 
     private void OnEnable()
     {
@@ -24,20 +25,15 @@ public class VariableRender : MonoBehaviour
         RenderPipelineManager.endCameraRendering -= OnPostRenderCallback;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         seenBy = 0;
     }
-    
+
     public void OnPreCullCallback(ScriptableRenderContext scriptableRenderContext, Camera camera)
     {
         var renderCamera = camera.GetComponent<VariableRenderCamera>();
-        if (!renderCamera)
-        {
-            EnableAllRenderer();
-            return;
-        }
-        if ((renderCamera.attachedPlayer & seenBy) > 0 && (onlyObservableBy == 0 || (renderCamera.attachedPlayer & onlyObservableBy) > 0 ))
+        if (!renderCamera || (!onlyShowTo && (renderCamera.attachedPlayer & seenBy) > 0 )|| (renderCamera.attachedPlayer & showTo) > 0)
         {
             EnableAllRenderer();
         }
