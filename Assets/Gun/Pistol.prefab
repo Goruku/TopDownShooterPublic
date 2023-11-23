@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 6305774223321399725}
   - component: {fileID: 8417672486863464692}
   - component: {fileID: 3501548260576251241}
+  - component: {fileID: 7981333523029494846}
   m_Layer: 8
   m_Name: VariableRenderTarget
   m_TagString: Untagged
@@ -159,7 +160,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMesh: {fileID: 3501548260576251241}
+  targetVisBlockers: []
+  variableRenderTargets:
+  - {fileID: 7981333523029494846}
+  observersCheckTargetTransform: 1
   renderers:
   - {fileID: 3450416295587980724}
   lights: []
@@ -212,6 +216,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7981333523029494846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2440798372642022858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b78cea3a127da9f47b9bcbe96bfe4bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 8055737655300606783}
 --- !u!1 &4856367537698883887
 GameObject:
   m_ObjectHideFlags: 0

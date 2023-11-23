@@ -654,6 +654,7 @@ GameObject:
   - component: {fileID: 5784748050833833161}
   - component: {fileID: 8347339282271081689}
   - component: {fileID: 1987643858230003946}
+  - component: {fileID: 7523191360418110624}
   m_Layer: 8
   m_Name: VariableRenderTarget
   m_TagString: Untagged
@@ -733,7 +734,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMesh: {fileID: 8347339282271081689}
+  variableRenderTargets:
+  - {fileID: 7523191360418110624}
+  targetVisBlockers: []
+  observersCheckTargetTransform: 1
   renderers:
   - {fileID: 1868095911792871136}
   - {fileID: 5625900353902928950}
@@ -742,3 +746,17 @@ MonoBehaviour:
   seenBy: 0
   showTo: 0
   onlyShowTo: 0
+--- !u!114 &7523191360418110624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7683944647101890110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b78cea3a127da9f47b9bcbe96bfe4bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 8870349460161077149}

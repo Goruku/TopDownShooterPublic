@@ -64,6 +64,7 @@ MonoBehaviour:
   visionCone: {fileID: 905505375007454930}
   anchor: {fileID: 5252995627261752493}
   angle: 90
+  radius: 5
   attachedPlayer: 1
   viewPointRenderContactFilter:
     useTriggers: 1
@@ -88,7 +89,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 320
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0

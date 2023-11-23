@@ -57,7 +57,7 @@ public class SmartFOV : MonoBehaviour, ISerializationCallbackReceiver
             var variableRender = collider.GetComponent<VariableRender>();
             if (variableRender)
             {
-                variableRender.Observe(anchor.position, potentialBlockers, attachedPlayer, 2);
+                variableRender.Observe(anchor.position, potentialBlockers, attachedPlayer);
             }
         }
     }

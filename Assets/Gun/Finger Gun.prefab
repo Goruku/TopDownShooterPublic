@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 9075937148624244025}
   - component: {fileID: 672728676126042397}
   - component: {fileID: 3459898653007361538}
+  - component: {fileID: 1585645166041390495}
   m_Layer: 8
   m_Name: VariableRenderTarget
   m_TagString: Untagged
@@ -138,7 +139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMesh: {fileID: 672728676126042397}
+  variableRenderTargets:
+  - {fileID: 1585645166041390495}
+  targetVisBlockers: []
+  observersCheckTargetTransform: 1
   renderers:
   - {fileID: 4462915163585966525}
   lights: []
@@ -146,6 +150,20 @@ MonoBehaviour:
   seenBy: 0
   showTo: 0
   onlyShowTo: 0
+--- !u!114 &1585645166041390495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3349598317152631541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b78cea3a127da9f47b9bcbe96bfe4bee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targets:
+  - {fileID: 3037060380145953141}
 --- !u!1 &4412326395602176058
 GameObject:
   m_ObjectHideFlags: 0

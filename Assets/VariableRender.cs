@@ -9,11 +9,9 @@ using UnityEngine.Serialization;
 
 public class VariableRender : MonoBehaviour
 {
-    [FormerlySerializedAs("targetMesh")] public Collider2D targetCollider;
+    public List<VariableRenderTarget> variableRenderTargets;
     public List<Collider2D> targetVisBlockers = new ();
-    public Vector2 cashedCenter;
-    public Mesh cashedMesh;
-    public bool observersCheckCenter = true;
+    public bool observersCheckTargetTransform = true;
     public List<Renderer> renderers = new ();
     public List<Light2D> lights = new ();
     public List<ShadowCaster2D> shadowCaster2Ds = new();
@@ -38,35 +36,28 @@ public class VariableRender : MonoBehaviour
     private void FixedUpdate()
     {
         seenBy = 0;
-        if (!targetCollider) return;
-        cashedMesh = targetCollider.CreateMesh(false, false);
-        cashedCenter = targetCollider.transform.position;
     }
 
-    public bool Observe(Vector3 pointFrom, ContactFilter2D potentialBlockers,  uint observer, int hitCount=1)
+    public bool Observe(Vector3 pointFrom, ContactFilter2D potentialBlockers,  uint observer)
     {
-        if (!targetCollider) return false;
-        if (observersCheckCenter && CheckPoint(pointFrom, cashedCenter, potentialBlockers, observer, hitCount)) return true;
-        foreach (var vertex in cashedMesh.vertices)
+        foreach (var variableRenderTarget in variableRenderTargets)
         {
-            if (CheckPoint(pointFrom, vertex, potentialBlockers, observer, hitCount)) return true;
-        }
-        return false;
-    }
-
-    private bool CheckPoint(Vector3 pointFrom, Vector3 pointTo, ContactFilter2D potentialBlockers,  uint observer, int hitCount=1)
-    {
-        RaycastHit2D[] lineHits = new RaycastHit2D[hitCount];
-        Physics2D.Linecast(pointFrom, pointTo, potentialBlockers, lineHits);
-        foreach (var lineHit in lineHits)
-        {
-            if (lineHit.collider == targetCollider || targetVisBlockers.Contains(lineHit.collider))
+            if (observersCheckTargetTransform)
+                if (CheckPoint(pointFrom, variableRenderTarget.transform.position, potentialBlockers, observer)) return true;
+            foreach (var targetPoint in variableRenderTarget.targets)
             {
-                seenBy |= observer;
-                return true;
+                if (CheckPoint(pointFrom, targetPoint.position, potentialBlockers, observer)) return true;
             }
         }
         return false;
+    }
+
+    private bool CheckPoint(Vector3 pointFrom, Vector3 pointTo, ContactFilter2D potentialBlockers,  uint observer)
+    {
+        var lineHit = Physics2D.Linecast(pointFrom, pointTo, potentialBlockers.layerMask);
+        if (lineHit.collider && !targetVisBlockers.Contains(lineHit.collider)) return false;
+        seenBy |= observer;
+        return true;
     }
 
     public void OnPreCullCallback(ScriptableRenderContext scriptableRenderContext, Camera camera)
