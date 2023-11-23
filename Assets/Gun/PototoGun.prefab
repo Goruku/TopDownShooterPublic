@@ -733,9 +733,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetMesh: {fileID: 8347339282271081689}
   renderers:
   - {fileID: 1868095911792871136}
   - {fileID: 5625900353902928950}
+  lights: []
+  shadowCaster2Ds: []
   seenBy: 0
   showTo: 0
   onlyShowTo: 0

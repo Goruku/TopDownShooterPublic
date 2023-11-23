@@ -12,7 +12,7 @@ public class Cursor : MonoBehaviour
     public float cursorSpeed = 0.03f;
     public Transform playerPosition;
     public Vector3 lastNonZeroLookVector;
-    public TargetingRange targetingRange;
+    public PhysicsTargeter physicsTargeter;
 
     public Camera activeCamera;
 
@@ -50,7 +50,7 @@ public class Cursor : MonoBehaviour
             var lookVector = callbackContext.ReadValue<Vector2>();
             if (lookVector != Vector2.zero)
                 lastNonZeroLookVector = lookVector;
-            transform.position = playerPosition.position + lastNonZeroLookVector.normalized * targetingRange.minRange + lastNonZeroLookVector * (targetingRange.maxRange - targetingRange.minRange);
+            transform.position = playerPosition.position + lastNonZeroLookVector.normalized * physicsTargeter.targetingRange.minRange + lastNonZeroLookVector * (physicsTargeter.targetingRange.maxRange - physicsTargeter.targetingRange.minRange);
         }
     }
 }

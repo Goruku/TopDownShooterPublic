@@ -1,189 +1,74 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.Tilemaps;
+using UnityEngine.Rendering.Universal;
 
-[RequireComponent(typeof(PolygonCollider2D))]
-public class SmartFOV : VariableRenderObserver
+[RequireComponent(typeof(Light2D))]
+public class SmartFOV : MonoBehaviour, ISerializationCallbackReceiver
 {
     public CircleCollider2D circleCollider2D;
-    public String bounceTagName = "VisBlockerMirror";
     public ContactFilter2D visionBlockFilter;
-    public float cornerCastSimilitude = 0.005f;
-    public MeshFilter meshFilter;
-    public PolygonCollider2D polygonCollider2D;
+    public Light2D visionCone;
     public Transform anchor;
-
-    public bool fanCast = false;
-    public bool cornerCast = true;
-    public Vector2[] contactPoints;
-
-    public int fanCount = 120;
+    
     public float angle = 90;
-    public int maxBounce = 2;
-    public float differentialDeadzone = 1;
-    public Quaternion lastAngle;
-    public Vector3 lastPosition;
-    public AnimationCurve rayConcentration = new();
-
+    public float radius = 5;
+    public uint attachedPlayer;
     public ContactFilter2D viewPointRenderContactFilter = new ContactFilter2D(){useLayerMask = true, useTriggers = true};
+    public ContactFilter2D potentialBlockers;
     public Collider2D[] colliders;
+
+    public bool shouldUpdateFOVLight = false;
     
     public int maxColliderCount = 50;
     
     private void Start()
     {
-        meshFilter = GetComponent<MeshFilter>();
-        polygonCollider2D = GetComponent<PolygonCollider2D>();
+        
+    }
+
+    private void Reset()
+    {
+        visionCone = GetComponent<Light2D>();
+        UpdateFOVLight();
+    }
+
+    private void UpdateFOVLight()
+    {
+        circleCollider2D.radius = radius;
+        visionCone.pointLightInnerAngle = angle;
+        visionCone.pointLightOuterAngle = angle;
+        visionCone.pointLightInnerRadius = circleCollider2D.radius;
+        visionCone.pointLightOuterRadius = circleCollider2D.radius;
     }
 
     private void FixedUpdate()
     {
-        Vector3 currentPosition = anchor.position;
-
-        if (fanCast)
-        {   
-            LinkedList<Vector2> variableContactPoints = new LinkedList<Vector2>();
-            var innerProduct = Quaternion.Dot(anchor.rotation, lastAngle);
-            if (lastPosition != currentPosition || 1 - innerProduct * innerProduct >= differentialDeadzone)
-            {
-                FanCast(currentPosition, in variableContactPoints);
-                variableContactPoints.AddLast(currentPosition);
-                contactPoints = variableContactPoints.ToArray();
-                SetPolygonCollider();
-                lastAngle = anchor.rotation;
-                lastPosition = currentPosition;
-            }
-        }
-        if (cornerCast)
+        if (shouldUpdateFOVLight)
         {
-            List<Vector3> vertices = new List<Vector3>();
-            FindCornerVertices(vertices);
-            vertices = vertices.OrderBy(vertexPosition =>
-                Quaternion.LookRotation(Vector3.forward, (Vector3) vertexPosition - currentPosition).eulerAngles[2]).ToList();
-            var polygon = new Vector2[vertices.Count*2 + 1];
-            for (int i = 0; i < vertices.Count ; i++)
-            {
-                CornerCast(vertices, polygon, i);
-            }
-            polygonCollider2D.points = contactPoints;
-            meshFilter.mesh = polygonCollider2D.CreateMesh(false, false);
+            UpdateFOVLight();
+            shouldUpdateFOVLight = false;
         }
-        if (!fanCast && !cornerCast)
-        {
-            ClearPolygonCollider();
-        }
-        FlagObjectsForRender();
-    }
-
-    private void FanCast(Vector3 currentPosition, in LinkedList<Vector2> variableContactPoints)
-    {
-        float angleInterval = 1f / fanCount;
-        var angleSplit = -angle / 2;
-        for (int i = 0; i < fanCount; i++)
-        {
-            var direction = anchor.rotation *
-                            Quaternion.AngleAxis(angleSplit*rayConcentration.Evaluate(i*angleInterval), Vector3.forward) * Vector3.up;
-            var rayHit = Physics2D.Raycast(currentPosition,
-                direction,
-                circleCollider2D.radius, visionBlockFilter.layerMask);
-            
-            
-            float distanceLeft = rayHit.collider ? circleCollider2D.radius - rayHit.distance : circleCollider2D.radius;
-            Vector2 hitPosition = rayHit.collider ? rayHit.point : currentPosition;
-
-            var bounces = maxBounce;
-            while ( bounces > 0 && rayHit.collider && (rayHit.collider.CompareTag(bounceTagName)))
-            {
-                variableContactPoints.AddLast(rayHit.point);
-                direction = Vector2.Reflect(direction, rayHit.normal);
-                RaycastHit2D[] rayHits = new RaycastHit2D[2];
-                Physics2D.Raycast(hitPosition, direction, visionBlockFilter, rayHits);
-                rayHit = rayHits[1];
-                distanceLeft -= rayHit.distance;
-                hitPosition = rayHit.point;
-
-                bounces--;
-            }
-            if (!rayHit.collider)
-            {
-                variableContactPoints.AddLast(hitPosition + (Vector2) (direction.normalized * distanceLeft));
-            }
-            else
-            {
-                variableContactPoints.AddLast(rayHit.point);
-            }
-        }
-        contactPoints[contactPoints.Length - 1] = anchor.position;
-    }
-
-    private void FindCornerVertices(List<Vector3> vertices)
-    {
-        Collider2D[] colliders = new Collider2D[50];
-        circleCollider2D.OverlapCollider(visionBlockFilter, colliders);
-        foreach (var collider in this.colliders)
-        {
-            if (collider)
-            {
-                vertices.AddRange(collider.CreateMesh(true, true).vertices);
-            }
-        }
-    }
-
-    private void WindVertices(out List<Vector2> woundVertices, in List<Vector2> vertices)
-    {
-        var currentPosition = anchor.position;
-
-        woundVertices = new List<Vector2>();
-    } 
-
-    private void CornerCast(in List<Vector3> vertices, in Vector2[] polygon, int index)
-    {
-        var maxEndpoint = (Vector2) (vertices[index] - anchor.position).normalized * circleCollider2D.radius;
-        var contacts = new RaycastHit2D[2];
-        Physics2D.Linecast(anchor.position, maxEndpoint, visionBlockFilter, contacts);
-        if (!contacts[0].collider) {
-            polygon[2*index] = maxEndpoint;
-            polygon[2*index + 1] = maxEndpoint;
-            return;
-        }
-        polygon[index] = contacts[0].point;
-        var nextContactPoint = contacts[1].collider ? contacts[1].point : maxEndpoint;
-        var backwardsCast = Physics2D.Linecast(nextContactPoint, contacts[0].point, visionBlockFilter.layerMask);
-        if ((backwardsCast.point - contacts[0].point).magnitude <= cornerCastSimilitude)
-            polygon[2*index + 1] = nextContactPoint;
-        else
-            polygon[2*index + 1] = contacts[0].point;
-    }
-
-    private void SetPolygonCollider()
-    {
-        polygonCollider2D.points = contactPoints;
-        meshFilter.mesh = polygonCollider2D.CreateMesh(false, false);
-    }
-
-    private void ClearPolygonCollider()
-    {
-        polygonCollider2D.points = null;
-        meshFilter.mesh = null;
-    }
-
-    protected override void FlagObjectsForRender()
-    {
+        
         colliders = new Collider2D[maxColliderCount];
-        polygonCollider2D.OverlapCollider(viewPointRenderContactFilter, colliders);
+        Physics2D.OverlapCollider(circleCollider2D, viewPointRenderContactFilter, colliders);
         foreach (var collider in colliders)
         {
             if (!collider) break;
             var variableRender = collider.GetComponent<VariableRender>();
             if (variableRender)
-                variableRender.seenBy |= attachedPlayer;
+            {
+                variableRender.Observe(anchor.position, potentialBlockers, attachedPlayer, 2);
+            }
         }
     }
-    
+
+    public void OnBeforeSerialize()
+    {
+
+    }
+
+    public void OnAfterDeserialize()
+    {
+        shouldUpdateFOVLight = true;
+    }
 }

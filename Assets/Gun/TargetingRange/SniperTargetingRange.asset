@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4d41c361a82f14db1c193e88c1600f, type: 3}
   m_Name: SniperTargetingRange
   m_EditorClassIdentifier: 
-  minRange: 1
+  minRange: 15
   maxRange: 40

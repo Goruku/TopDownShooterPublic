@@ -355,8 +355,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetCollider: {fileID: 1661485221608390014}
+  cashedCenter: {x: 0, y: 0}
+  cashedMesh: {fileID: 0}
+  observersCheckCenter: 1
   renderers:
   - {fileID: 4921743566306624525}
+  lights: []
+  shadowCaster2Ds: []
   seenBy: 0
   showTo: 0
   onlyShowTo: 0
