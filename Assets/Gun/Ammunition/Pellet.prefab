@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: -5719019089851476421}
   - component: {fileID: 7780970312772909919}
   - component: {fileID: 4739357955469940373}
+  - component: {fileID: 3176121404717763296}
   m_Layer: 3
   m_Name: Pellet
   m_TagString: Untagged
@@ -273,8 +274,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84024b667e0fffb49b0737d5fa57ddf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifetime: 5
+  lifetime: 3
   lifeEnd: 0
+--- !u!114 &3176121404717763296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245111514932939356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8adc9fb41d6aba43a36e4ca76651564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSettings: {fileID: 11400000, guid: 0ec03b9adb015dc41829dab711dc5562, type: 2}
+  audioSource: {fileID: -5719019089851476421}
+  shouldFetchSettings: 1
+  channel: 1
 --- !u!1 &566292365685114351
 GameObject:
   m_ObjectHideFlags: 0
@@ -355,10 +372,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c700f5c65ccc6dd409b286a8b186584e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCollider: {fileID: 1661485221608390014}
-  cashedCenter: {x: 0, y: 0}
-  cashedMesh: {fileID: 0}
-  observersCheckCenter: 1
+  variableRenderTargets: []
+  targetVisBlockers: []
+  observersCheckTargetTransform: 1
   renderers:
   - {fileID: 4921743566306624525}
   lights: []

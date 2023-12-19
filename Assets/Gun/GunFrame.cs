@@ -120,7 +120,6 @@ public class GunFrame : Entity, ISerializationCallbackReceiver
         public List<GameObject> bullets;
         public float velocity;
         public float randomness;
-        public AudioClip shotSound;
     }
 
     public enum GunManagementType

@@ -63,8 +63,8 @@ MonoBehaviour:
     maxNormalAngle: 0
   visionCone: {fileID: 905505375007454930}
   anchor: {fileID: 5252995627261752493}
-  angle: 90
-  radius: 5
+  angle: 160
+  radius: 50
   attachedPlayer: 1
   viewPointRenderContactFilter:
     useTriggers: 1

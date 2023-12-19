@@ -10,9 +10,6 @@ public class GunChamber : GunPart
     public Propellant externalPropellant;
     public Caliber caliber;
     public Ammunition round;
-    public AudioClip fireSound;
-    public AudioClip emptySound;
-    public AudioClip jam;
     public GunRandomness gunRandomness = new GunRandomness {gunRandomness = 0, gunIncidence = 0.5f};
 
     public ChamberEvent fed = (shot, ammunition, state) => {Debug.Log("Fed");};
@@ -62,7 +59,7 @@ public class GunChamber : GunPart
     {
         if (!round)
         {
-            wasEmpty(new GunFrame.Shot {empty = true, shotSound = emptySound}, round, gunFrame.GetState());
+            wasEmpty(new GunFrame.Shot {empty = true}, round, gunFrame.GetState());
             return;
         }
         var shot = new GunFrame.Shot
@@ -72,7 +69,6 @@ public class GunChamber : GunPart
             bullets = GetBullets(round),
             velocity = CalculateBulletVelocity(round),
             randomness = (gunRandomness.gunIncidence)*gunRandomness.gunRandomness + (1- gunRandomness.gunIncidence)*round.bulletRandomness,
-            shotSound = fireSound
         };
         var roundToSend = round;
         round = null;

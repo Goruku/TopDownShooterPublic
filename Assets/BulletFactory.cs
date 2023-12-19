@@ -5,29 +5,18 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[RequireComponent(typeof(AudioSource))]
 public class BulletFactory : GunPart
 {
-    [HideInInspector]
-    public AudioSource audioSource;
-
-    private void Reset()
-    {
-        audioSource = GetComponent<AudioSource>();
-    }
-
     public void CreateBullets(GunFrame.Shot shot, Transform fireLocation)
     {
-        if (shot.misfire && audioSource)
+        if (shot.misfire)
         {
-            audioSource.PlayOneShot(shot.shotSound);
             //misfire firing effect?
             return;
         }
         
-        if (shot.empty && audioSource)
+        if (shot.empty)
         {
-            audioSource.PlayOneShot(shot.shotSound);
             return;
         }
 
@@ -36,7 +25,6 @@ public class BulletFactory : GunPart
             var newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
             newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*shot.velocity;
         }
-        if (audioSource && shot.shotSound)
-            audioSource.PlayOneShot(shot.shotSound);
+
     }
 }
