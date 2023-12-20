@@ -12,11 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76484528d2388a48a05d9f00ab60a7c, type: 3}
   m_Name: PistolGunSounds
   m_EditorClassIdentifier: 
-  Reloading: {fileID: 0}
-  Chambering: {fileID: 0}
-  Arming: {fileID: 0}
-  ReleasingHammer: {fileID: 0}
-  PullingTrigger: {fileID: 0}
-  Firing: {fileID: 8300000, guid: 9339134a9727c1a48be368477e220657, type: 3}
-  FiringEmpty: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
-  Jammed: {fileID: 0}
+  Reloading:
+    audioClip: {fileID: 0}
+    soundScale: 1
+  Chambering:
+    audioClip: {fileID: 0}
+    soundScale: 1
+  Arming:
+    audioClip: {fileID: 8300000, guid: d00bed8906e372e4c8be55f6257178a1, type: 3}
+    soundScale: 1
+  ReleasingHammer:
+    audioClip: {fileID: 8300000, guid: d00bed8906e372e4c8be55f6257178a1, type: 3}
+    soundScale: 1
+  PullingTrigger:
+    audioClip: {fileID: 0}
+    soundScale: 1
+  Firing:
+    audioClip: {fileID: 8300000, guid: 9339134a9727c1a48be368477e220657, type: 3}
+    soundScale: 0.35
+  FiringEmpty:
+    audioClip: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
+    soundScale: 1
+  Jammed:
+    audioClip: {fileID: 0}
+    soundScale: 1

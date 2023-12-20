@@ -10,15 +10,21 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
     public uint localSettingHash = 0;
     private AudioSettings _oldAudioSettings;
     public AudioSettings audioSettings;
-    public List<AudioChannel> audioChannels;
+    public List<AudioChannel> audioChannels = new ();
     public float defaultLocalSound = 1;
 
     public bool shouldFetchSettings = false;
 
+    private void Start()
+    {
+        UpdateAllVolume();
+    }
+
     private void Reset()
     {
         var localAudioSource = GetComponent<AudioSource>();
-        audioChannels.Add(new AudioChannel(){audioSource = localAudioSource, localSound = defaultLocalSound}); 
+        if (localAudioSource)
+            GetChannels().Add(new AudioChannel(){audioSource = localAudioSource, localSound = defaultLocalSound}); 
     }
 
     private void Update()
@@ -34,7 +40,7 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
         audioChannels[index].PlayOneShot(audioClip, volumeScale);
     }
     
-    private void UpdateAllVolume()
+    public void UpdateAllVolume()
     {
         if (!audioSettings)
         {
@@ -42,12 +48,17 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
             return;
         }
 
-        foreach (var audioChannel in audioChannels)
+        foreach (var audioChannel in GetChannels())
         {
             audioChannel.UpdateVolume(audioSettings);
         }
         localSettingHash = audioSettings.settingHash;
         shouldFetchSettings = false;
+    }
+
+    public virtual List<AudioChannel> GetChannels()
+    {
+        return audioChannels;
     }
 
     public void OnBeforeSerialize()
@@ -63,20 +74,35 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
     [Serializable]
     public class AudioChannel
     {
+        public AudioSettings cachedAudioSettings;
+
+        public bool neverSpatial;
         public AudioSource audioSource;
         public AudioSettings.Channel channel;
+        private float _oldLocalSound;
         [Range(0f, 1f)]
         public float localSound;
 
+
+        
         public void PlayOneShot(AudioClip audioClip , float volumeScale=1f)
         {
-            audioSource.PlayOneShot(audioClip, volumeScale * localSound);
+            if (localSound != _oldLocalSound)
+                UpdateVolume();
+            audioSource.PlayOneShot(audioClip, volumeScale);
         }
 
         public void UpdateVolume(AudioSettings audioSettings)
         {
-            audioSource.volume = audioSettings.GetVolume(channel);
-            audioSource.spatialBlend = audioSettings.spatialBlend;
+            cachedAudioSettings = audioSettings;
+            _oldLocalSound = localSound;
+            audioSource.volume = audioSettings.GetVolume(channel) * localSound;
+            audioSource.spatialBlend = neverSpatial ? 0 : audioSettings.spatialBlend;
+        }
+
+        public void UpdateVolume()
+        {
+            UpdateVolume(cachedAudioSettings);
         }
     }
 }

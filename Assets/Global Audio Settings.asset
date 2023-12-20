@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef3d4d5071d2c94a88482f94b0f0d7e, type: 3}
   m_Name: Global Audio Settings
   m_EditorClassIdentifier: 
-  audioManagers:
-  - {fileID: 0}
+  settingHash: 209
+  spatialBlend: 1
   masterVolume: 1
   sfxVolume: 1
   gunSoundsVolume: 1
