@@ -5,47 +5,47 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[RequireComponent(typeof(AudioSource))]
 public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
 {
     public uint localSettingHash = 0;
     private AudioSettings _oldAudioSettings;
     public AudioSettings audioSettings;
-    public AudioSource audioSource;
-    [Range(0f, 1f)]
-    public float localSound = 1;
+    public List<AudioChannel> audioChannels;
+    public float defaultLocalSound = 1;
 
     public bool shouldFetchSettings = false;
 
-    public AudioSettings.Channel channel;
-
     private void Reset()
     {
-        audioSource = GetComponent<AudioSource>();
+        var localAudioSource = GetComponent<AudioSource>();
+        audioChannels.Add(new AudioChannel(){audioSource = localAudioSource, localSound = defaultLocalSound}); 
     }
 
     private void Update()
     {
         if (shouldFetchSettings)
-            UpdateVolume();
+            UpdateAllVolume();
     }
 
-    public void PlayOneShotMastered(AudioClip audioClip, float volumeScale=1f)
+    public void PlayOneShotMastered(AudioClip audioClip, float volumeScale=1f, int index=0)
     {
         if (localSettingHash != audioSettings.settingHash)
-            UpdateVolume();
-        audioSource.PlayOneShot(audioClip, volumeScale);
+            UpdateAllVolume();
+        audioChannels[index].PlayOneShot(audioClip, volumeScale);
     }
     
-    private void UpdateVolume()
+    private void UpdateAllVolume()
     {
         if (!audioSettings)
         {
             Debug.LogWarning("No AudioSettings Found");
             return;
         }
-        audioSource.volume = audioSettings.GetVolume(channel) * localSound;
-        audioSource.spatialBlend = audioSettings.spatialBlend;
+
+        foreach (var audioChannel in audioChannels)
+        {
+            audioChannel.UpdateVolume(audioSettings);
+        }
         localSettingHash = audioSettings.settingHash;
         shouldFetchSettings = false;
     }
@@ -58,5 +58,25 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
     public void OnAfterDeserialize()
     {
 
+    }
+
+    [Serializable]
+    public class AudioChannel
+    {
+        public AudioSource audioSource;
+        public AudioSettings.Channel channel;
+        [Range(0f, 1f)]
+        public float localSound;
+
+        public void PlayOneShot(AudioClip audioClip , float volumeScale=1f)
+        {
+            audioSource.PlayOneShot(audioClip, volumeScale * localSound);
+        }
+
+        public void UpdateVolume(AudioSettings audioSettings)
+        {
+            audioSource.volume = audioSettings.GetVolume(channel);
+            audioSource.spatialBlend = audioSettings.spatialBlend;
+        }
     }
 }

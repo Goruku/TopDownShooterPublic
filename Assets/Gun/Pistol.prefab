@@ -748,10 +748,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localSettingHash: 0
   audioSettings: {fileID: 11400000, guid: 0ec03b9adb015dc41829dab711dc5562, type: 2}
-  audioSource: {fileID: 6452326141462324958}
-  localSound: 0.937
+  audioChannels:
+  - audioSource: {fileID: 6452326141462324958}
+    channel: 2
+    localSound: 0.975
+  defaultLocalSound: 1
   shouldFetchSettings: 1
-  channel: 2
 --- !u!114 &5802417214909939118
 MonoBehaviour:
   m_ObjectHideFlags: 0
