@@ -356,7 +356,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     fadeInTime: 1
-    fadeOutTime: 5
+    fadeOutTime: 2
     isFading: 0
     isFadingIn: 0
     fadeStartTime: 0

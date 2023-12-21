@@ -22,15 +22,14 @@ public class MusicManager : AudioManager, ISerializationCallbackReceiver
 
     private List<Action> deferredFades = new ();
     
-    public override List<AudioChannel> GetChannels()
+    protected override List<AudioChannel> GetChannels()
     {
         return _musicChannels.Cast<AudioChannel>().ToList();
     }
     
-    void FixedUpdate()
+    protected override void FixedUpdate()
     {
-        if (shouldFetchSettings)
-            UpdateAllVolume();
+        base.FixedUpdate();
         
         foreach (var deferredFade in deferredFades)
         {

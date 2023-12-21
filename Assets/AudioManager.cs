@@ -27,9 +27,9 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
             GetChannels().Add(new AudioChannel(){audioSource = localAudioSource, localSound = defaultLocalSound}); 
     }
 
-    private void Update()
+    protected virtual void FixedUpdate()
     {
-        if (shouldFetchSettings)
+        if (localSettingHash != audioSettings.settingHash)
             UpdateAllVolume();
     }
 
@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour, ISerializationCallbackReceiver
         shouldFetchSettings = false;
     }
 
-    public virtual List<AudioChannel> GetChannels()
+    protected virtual List<AudioChannel> GetChannels()
     {
         return audioChannels;
     }

@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fef3d4d5071d2c94a88482f94b0f0d7e, type: 3}
   m_Name: Global Audio Settings
   m_EditorClassIdentifier: 
-  settingHash: 209
+  settingHash: 289
   spatialBlend: 1
-  masterVolume: 1
+  masterVolume: 0.496
   sfxVolume: 1
-  gunSoundsVolume: 1
+  gunSoundsVolume: 0.916
   environmentVolume: 1
   footprintVolume: 1
   musicVolume: 1

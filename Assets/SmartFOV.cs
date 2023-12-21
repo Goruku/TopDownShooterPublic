@@ -9,7 +9,8 @@ public class SmartFOV : MonoBehaviour, ISerializationCallbackReceiver
     public ContactFilter2D visionBlockFilter;
     public Light2D visionCone;
     public Transform anchor;
-    
+
+    public float innerAngle = 0;
     public float angle = 90;
     public float radius = 5;
     public uint attachedPlayer;
@@ -35,7 +36,7 @@ public class SmartFOV : MonoBehaviour, ISerializationCallbackReceiver
     private void UpdateFOVLight()
     {
         circleCollider2D.radius = radius;
-        visionCone.pointLightInnerAngle = angle;
+        visionCone.pointLightInnerAngle = innerAngle;
         visionCone.pointLightOuterAngle = angle;
         visionCone.pointLightInnerRadius = circleCollider2D.radius;
         visionCone.pointLightOuterRadius = circleCollider2D.radius;
