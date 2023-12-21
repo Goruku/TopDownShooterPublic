@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Lifetime : MonoBehaviour
 {
+    [SerializeField]
+    private PoolablePrefab poolablePrefab;
+    
     public float lifetime;
     public float lifeEnd;
-    
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
         lifeEnd = Time.time + lifetime;
     }
@@ -16,6 +19,15 @@ public class Lifetime : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Time.time > lifeEnd) Destroy(gameObject);
+        if (Time.time < lifeEnd) return;
+
+        if (poolablePrefab)
+        {
+            poolablePrefab.Release();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

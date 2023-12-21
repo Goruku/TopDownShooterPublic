@@ -293,6 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 5649832260021112759}
+  poolManagerProvider: {fileID: 11400000, guid: 42cb626aaceba334687fda1f63905943, type: 2}
 --- !u!114 &7489913633432599335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,7 +750,9 @@ MonoBehaviour:
   localSettingHash: 0
   audioSettings: {fileID: 11400000, guid: 0ec03b9adb015dc41829dab711dc5562, type: 2}
   audioChannels:
-  - audioSource: {fileID: 6452326141462324958}
+  - cachedAudioSettings: {fileID: 0}
+    neverSpatial: 0
+    audioSource: {fileID: 6452326141462324958}
     channel: 2
     localSound: 0.975
   defaultLocalSound: 1

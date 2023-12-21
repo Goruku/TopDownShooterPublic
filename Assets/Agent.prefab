@@ -624,34 +624,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 306583112605866628}
     m_Modifications:
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_Intensity
-      value: 2.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_FalloffIntensity
-      value: 0.683
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_PointLightInnerRadius
-      value: 3.18
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_PointLightOuterRadius
-      value: 16.18
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_LocalBounds.m_Center.y
-      value: -0.00000011920929
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_LocalBounds.m_Extent.x
-      value: 0.9985302
-      objectReference: {fileID: 0}
-    - target: {fileID: 905505375007454930, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
-      propertyPath: m_LocalBounds.m_Extent.y
-      value: 0.99853027
-      objectReference: {fileID: 0}
     - target: {fileID: 4309565692217249107, guid: f2cf2629a2b57ef4d99a350c7e5cdd0e, type: 3}
       propertyPath: m_Name
       value: FOV Mesh

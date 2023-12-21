@@ -7,6 +7,9 @@ using UnityEngine.Serialization;
 
 public class BulletFactory : GunPart
 {
+    [SerializeField]
+    private PoolManagerProvider poolManagerProvider;
+    
     public void CreateBullets(GunFrame.Shot shot, Transform fireLocation)
     {
         if (shot.misfire)
@@ -22,7 +25,21 @@ public class BulletFactory : GunPart
 
         foreach (var bullet in shot.bullets)
         {
-            var newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
+            GameObject newBullet;
+            if (poolManagerProvider)
+            {
+                newBullet = poolManagerProvider.PoolManager.FetchByPoolId(PoolablePrefab.PoolId.Bullet);
+                if (!newBullet)
+                {
+                    return;
+                }
+                newBullet.transform.position = fireLocation.position;
+                newBullet.transform.rotation = fireLocation.rotation;
+            }
+            else
+            {
+                newBullet = Instantiate(bullet, fireLocation.position, fireLocation.rotation);
+            }
             newBullet.GetComponent<Rigidbody2D>().velocity = (fireLocation.rotation*Vector3.up).normalized*shot.velocity;
         }
 

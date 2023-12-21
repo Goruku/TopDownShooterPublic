@@ -235,7 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 6071787193498473071}
-  audioSource: {fileID: 6329659386538085008}
+  poolManagerProvider: {fileID: 11400000, guid: 42cb626aaceba334687fda1f63905943, type: 2}
 --- !u!114 &5072468739876262980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,9 +268,6 @@ MonoBehaviour:
   externalPropellant: {fileID: 0}
   caliber: {fileID: 11400000, guid: abc46207cbd893e4db903db1afd507c0, type: 2}
   round: {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
-  fireSound: {fileID: 8300000, guid: fcf4e68527535f840aee55dbd374905f, type: 3}
-  emptySound: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
-  jam: {fileID: 0}
   gunRandomness:
     gunRandomness: 0
     gunIncidence: 0.5
@@ -494,7 +491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 6071787193498473071}
-  audioSource: {fileID: 3167951119629828078}
+  poolManagerProvider: {fileID: 11400000, guid: 42cb626aaceba334687fda1f63905943, type: 2}
 --- !u!114 &4953026683196659756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,9 +524,6 @@ MonoBehaviour:
   externalPropellant: {fileID: 0}
   caliber: {fileID: 11400000, guid: abc46207cbd893e4db903db1afd507c0, type: 2}
   round: {fileID: 11400000, guid: 782d78ee16956624e949fad7975133c9, type: 2}
-  fireSound: {fileID: 8300000, guid: fcf4e68527535f840aee55dbd374905f, type: 3}
-  emptySound: {fileID: 8300000, guid: 902d02f64baec9244a804ce4ada369f6, type: 3}
-  jam: {fileID: 0}
   gunRandomness:
     gunRandomness: 0
     gunIncidence: 0.5
