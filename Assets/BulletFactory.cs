@@ -9,6 +9,8 @@ public class BulletFactory : GunPart
 {
     [SerializeField]
     private PoolManagerProvider poolManagerProvider;
+    [SerializeField]
+    private PoolablePrefab.PoolId poolId;
     
     public void CreateBullets(GunFrame.Shot shot, Transform fireLocation)
     {
@@ -28,7 +30,7 @@ public class BulletFactory : GunPart
             GameObject newBullet;
             if (poolManagerProvider)
             {
-                newBullet = poolManagerProvider.PoolManager.FetchByPoolId(PoolablePrefab.PoolId.Bullet);
+                newBullet = poolManagerProvider.PoolManager.FetchByPoolId(poolId);
                 if (!newBullet)
                 {
                     return;

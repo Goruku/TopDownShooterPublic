@@ -12,7 +12,8 @@ public class PoolablePrefab : MonoBehaviour
     public enum PoolId
     {
         Bullet,
-        NULL
+        Laser,
+        EDIT_ONLY
     }
 
     public void Release()

@@ -213,9 +213,6 @@ MonoBehaviour:
   externalPropellant: {fileID: 11400000, guid: 3ed0021d36a2e6745aa8141ec1ad2609, type: 2}
   caliber: {fileID: 11400000, guid: 69616631e9a80fe41a00ea4474f8ef2d, type: 2}
   round: {fileID: 11400000, guid: c2de592400d0fe24295bcf29806bd25a, type: 2}
-  fireSound: {fileID: 8300000, guid: c143d723af33c7e498f66bb6f7a10ab5, type: 3}
-  emptySound: {fileID: 8300000, guid: 5248d9e72dd283d4e8a63a0346ff13fc, type: 3}
-  jam: {fileID: 0}
   gunRandomness:
     gunRandomness: 1
     gunIncidence: 1
@@ -341,7 +338,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   velocityMultiplier: 1
   gunFrame: {fileID: 0}
-  audioSource: {fileID: 8466811307099698547}
+  poolManagerProvider: {fileID: 11400000, guid: 42cb626aaceba334687fda1f63905943, type: 2}
+  poolId: 1
 --- !u!114 &8303450158409849904
 MonoBehaviour:
   m_ObjectHideFlags: 0

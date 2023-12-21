@@ -294,6 +294,7 @@ MonoBehaviour:
   velocityMultiplier: 1
   gunFrame: {fileID: 5649832260021112759}
   poolManagerProvider: {fileID: 11400000, guid: 42cb626aaceba334687fda1f63905943, type: 2}
+  poolId: 0
 --- !u!114 &7489913633432599335
 MonoBehaviour:
   m_ObjectHideFlags: 0

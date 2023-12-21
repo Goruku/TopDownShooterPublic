@@ -1,45 +1,51 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PoolManager : MonoBehaviour, ISerializationCallbackReceiver
 {
     
-    public Dictionary<PoolablePrefab.PoolId, Pool> activePools = new ();
-
-    public List<Pool> _activePools = new ();
+    public List<PoolablePrefab.PoolId> _activePoolKeys = new ();
+    public List<Pool> _activePoolValues = new ();
     
+    public Dictionary<PoolablePrefab.PoolId, Pool>  activePools = new ();
+
     public void OnBeforeSerialize()
     {
-        _activePools.Clear();
-        foreach (var activePool in activePools.Values)
+        _activePoolKeys.Clear();
+        _activePoolValues.Clear();
+
+        foreach (var activePool in activePools)
         {
-            _activePools.Add(activePool);
+            _activePoolKeys.Add(activePool.Key);
+            _activePoolValues.Add(activePool.Value);
         }
     }
 
     public void OnAfterDeserialize()
     {
         activePools.Clear();
-        foreach (var activePool in _activePools)
+
+        for (int i = 0; i < _activePoolKeys.Count; i++)
         {
-            if (!activePool)
+            if (i >= _activePoolValues.Count)
             {
-                activePools.Add(PoolablePrefab.PoolId.NULL, activePool);
-            }
-            else
-            {
-                if (activePools.ContainsKey(activePool.poolId))
+                if (activePools.ContainsKey(_activePoolKeys[i]))
                 {
-                    Debug.LogWarning("Pool id was already present, attempted to add Null, None instead");
-                    activePools.Add(PoolablePrefab.PoolId.NULL, null);
+                    Debug.LogWarning("Tried adding an existing key, replacing by EDIT_ONLY instead");
+                    activePools.Add(PoolablePrefab.PoolId.EDIT_ONLY, null);
                 }
                 else
                 {
-                    activePools.Add(activePool.poolId, activePool);
+                    activePools.Add(_activePoolKeys[i], null);
                 }
             }
+            else
+            {
+                activePools.Add(_activePoolKeys[i], _activePoolValues[i]);
+            }
         }
+            
     }
 
     /*
